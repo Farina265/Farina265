@@ -4,11 +4,10 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="theme-color" content="#EE7B3A">
-<link rel="manifest" href="/manifest.json">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="Bakery Register">
-<title>Farina Bakery — Stock Register v4.7</title>
+<title>Farina Bakery — Stock Register v4.9</title>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu:wght@600;700&family=Noto+Sans+Arabic:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/JsBarcode/3.11.5/JsBarcode.all.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html5-qrcode/2.3.8/html5-qrcode.min.js"></script>
@@ -137,10 +136,6 @@ body.dr-open #draft-box{display:none!important}
 #stat-low{cursor:pointer}
 .date-hint{margin-top:3px;margin-bottom:0;color:var(--brass);font-weight:600}
 .ls-row-out{background:var(--red-bg);border-radius:4px;padding-left:8px;padding-right:8px}
-.sync-badge{position:absolute;top:12px;right:12px;font-size:.7rem;padding:4px 10px;border-radius:12px;font-family:Inter,sans-serif;font-weight:600;background:#fff;border:1px solid var(--rule);color:var(--ink-soft)}
-.sync-badge.online{background:var(--green-bg);color:var(--green);border-color:var(--green)}
-.sync-badge.offline{background:var(--red-bg);color:var(--red);border-color:var(--red)}
-.sync-badge.syncing{background:var(--blue-bg);color:var(--blue);border-color:var(--blue)}
 #b-item-results .sr-item,#e-item-results .sr-item,#p-item-results .sr-item{padding:10px 12px;border-bottom:1px dashed var(--rule);cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:8px}
 #b-item-results .sr-item:hover,#e-item-results .sr-item:hover,#p-item-results .sr-item:hover{background:var(--blue-bg)}
 /* Billing mein item name ke saath barcode na dikhayein */
@@ -231,113 +226,23 @@ nav button.active{background:#fff;border-bottom-color:var(--green)}
 .pager button.small{background:var(--green);min-width:84px}
 body:not(.delall-on) .delall-btn{display:none!important}
 </style>
-
-
-<!-- ===== v4.8: Sidebar look ===== -->
-<style id="sidebar-style">
-:root{--paper:#f2f6f9;--paper-dark:#e3e9ef;--card:#fff;--rule:#e3e9ef;--teal:#12a594;--teal-d:#0e8577;--navy:#14213d;--navy2:#1c3556}
-body{background:#f2f6f9;background-image:none}
-header{background:#fff;border-bottom:1px solid #e3e9ef;box-shadow:none}
-.card{border-radius:20px;box-shadow:none;border-color:#e3e9ef}
-.card h2{color:#14213d}
-.stat{border-radius:18px;border-color:#e3e9ef}
-button.primary{border-radius:14px;background:linear-gradient(135deg,#17b5a2,#0e8577);box-shadow:0 8px 18px rgba(18,165,148,.28)}
-button.secondary{border-radius:14px;color:#0e8577;border-color:#12a594}
-#sb-topbar{position:sticky;top:0;z-index:60;display:flex;align-items:center;gap:12px;background:#fff;border-bottom:1px solid #e3e9ef;padding:10px 14px}
-#sb-ham{width:42px;height:42px;border-radius:12px;background:#f2f6f9;border:0;font-size:20px;cursor:pointer;color:#14213d}
-#sb-title{font-size:1.15rem;font-weight:700;color:#14213d;flex:1;font-family:Inter,sans-serif}
-#sb-overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:80;display:none}
-#sb-overlay.show{display:block}
-body nav{position:fixed;top:0;left:0;bottom:0;width:270px;max-width:84vw;z-index:90;background:#14213d;display:flex;flex-direction:column;flex-wrap:nowrap;justify-content:flex-start;align-items:stretch;gap:2px;margin:0;padding:18px 12px 24px;overflow-x:hidden;overflow-y:auto;transform:translateX(-102%);transition:transform .25s;box-shadow:none}
-body nav.open{transform:none;box-shadow:8px 0 30px rgba(0,0,0,.3)}
-body nav .nav-brand{display:flex;align-items:center;gap:10px;margin:0 4px 8px;color:#fff}
-body nav .nb-logo{width:42px;height:42px;border-radius:12px;background:#12a594;color:#fff;display:grid;place-items:center;font-weight:800;font-size:22px}
-body nav .nav-brand b{display:block;font-size:1.05rem;font-family:Inter,sans-serif}
-body nav .nav-brand small{display:block;letter-spacing:3px;font-size:.62rem;color:#9fb1c8}
-body nav .nav-grp{font-size:.68rem;letter-spacing:3px;color:#7f93ad;margin:16px 8px 6px;text-transform:uppercase}
-body nav button{display:block;width:100%;flex:0 0 auto;min-width:0;text-align:left;background:transparent;color:#cfd9e6;border:0;border-bottom:0;border-radius:12px;padding:12px 14px;font-size:.95rem;font-weight:600}
-body nav button:hover{background:#1c3556}
-body nav button.active{background:#12a594;color:#fff;border:0}
-body nav button .nav-badge{float:right;margin-top:2px}
-body nav .nav-logout{margin-top:auto;padding:14px;color:#f08c8c;cursor:pointer;font-weight:600}
-label{line-height:1.4}
-#pos-bill h2{display:flex;align-items:center;justify-content:space-between;gap:8px}
-#b-clear{background:#fdeeee;color:#e05252;border:0;border-radius:12px;padding:8px 16px;font-weight:700;cursor:pointer;width:auto!important;flex:none;margin:0!important;font-size:.85rem}
-/* ---- Billing: wide screens = left products, right Current Bill ---- */
-.bill-grid{display:block}
-@media(min-width:1100px){
-  body.on-bill main{max-width:1320px}
-  .bill-grid{display:grid;grid-template-columns:minmax(0,1fr) 410px;grid-template-rows:auto auto auto 1fr;column-gap:18px}
-  .bill-grid>.pos-scan{grid-column:1;grid-row:1}
-  .bill-grid>.bill-products{grid-column:1;grid-row:2}
-  .bill-grid>.bill-history{grid-column:1;grid-row:3}
-  .bill-grid>#pos-bill-home{grid-column:2;grid-row:1 / span 4;align-self:start;position:sticky;top:12px;max-height:calc(100vh - 24px);overflow-y:auto;border-radius:20px}
-  .bill-grid>#pos-bill-home .card{margin-bottom:0}
-}
-/* ---- POS-style billing ---- */
-.pos-scan{background:#1c3556;border-radius:20px;padding:18px;color:#cfd9e6;margin-bottom:16px}
-.pos-scan>small{display:block;letter-spacing:.5px;font-size:.72rem;color:#b7c6da}
-.pos-scan input[type=text]{margin:8px 0;border:2px solid #12a594;border-radius:14px;padding:13px 14px;font-size:1rem;background:#fff}
-.pos-scan-row{display:flex;gap:10px;align-items:stretch}
-.pos-scan-row input{flex:1;min-width:0;border:2px solid #12a594;border-radius:14px;padding:12px 14px;font-size:1.05rem;font-weight:700;background:#fff}
-.pos-add{background:#12a594;color:#fff;border:0;border-radius:14px;padding:0 26px;font-weight:700;font-size:1rem;cursor:pointer;font-family:inherit}
-.pos-scan-btns{display:flex;gap:8px;margin-top:10px}
-.pos-scan .camera-btn{margin-top:0;flex:1;background:rgba(255,255,255,.1);color:#fff;border:1px solid rgba(255,255,255,.22);border-radius:12px;padding:10px 6px;font-size:.85rem}
-.pos-prods{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px}
-@media(min-width:700px){.pos-prods{grid-template-columns:repeat(4,1fr)}}
-.pos-prod{border:1px solid #e3e9ef;border-radius:16px;padding:14px;background:#fff;text-align:left;cursor:pointer;font-family:inherit;color:#14213d;transition:transform .05s,box-shadow .15s}
-.pos-prod:hover{box-shadow:0 4px 14px rgba(20,33,61,.08)}
-.pos-prod:active{transform:scale(.98)}
-.pos-prod .pe{font-size:34px;line-height:1.1}
-.pos-prod b{display:block;margin-top:6px;font-size:.95rem;line-height:1.3}
-.pos-prod small{display:block;color:#6b7a90;margin-top:2px;font-size:.8rem}
-.pos-prod u{display:block;text-decoration:none;color:#12a594;font-weight:700;margin-top:6px;font-family:Inter,sans-serif}
-.pos-prod.out{opacity:.45}
-.pos-prod.low small{color:#e05252}
-#pos-bill h2{font-size:1.35rem;color:#14213d;border-bottom:0;padding-bottom:0}
-#pos-bill .bill-line-row{border-bottom:1px solid #e3e9ef;padding:12px 0}
-.pos-actions{display:flex;gap:10px;margin-top:14px;align-items:stretch}
-.pos-actions button{margin-top:0!important;width:auto!important}
-.pos-actions .primary{flex:2}
-.pos-hold{flex:1;background:#fff;color:#14213d;border:1px solid #e3e9ef;border-radius:14px;font-weight:700;font-size:1rem;cursor:pointer;font-family:inherit}
-.held-row{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:10px 12px;margin-top:8px;background:#f2f6f9;border-radius:12px;font-size:.88rem;flex-wrap:wrap}
-@media(min-width:960px){
-  #appDiv{margin-left:270px}
-  body nav{transform:none}
-  #sb-topbar{display:none}
-  #sb-overlay{display:none!important}
-}
-</style>
-
-<!-- ===== Startup helpers ===== -->
-<style>
-.modal-overlay{z-index:6000}.toast{z-index:7000}
-.modal-box p,.modal-box label{white-space:pre-line}
-@media(max-width:560px){header{padding-top:60px}nav{padding-top:8px!important}}
-/* Compact Settings: ہر box title پر click کر کے کھولیں یا بند کریں */
-#tab-settings > .settings-collapse-card > h2{cursor:pointer;user-select:none;min-height:28px}
-#tab-settings > .settings-collapse-card > h2::after{content:'−';font-family:Inter,sans-serif;font-size:1.25rem;line-height:1;color:var(--brass);margin-left:auto;padding-left:10px}
-#tab-settings > .settings-collapse-card.collapsed > h2::after{content:'+'}
-#tab-settings > .settings-collapse-card.collapsed > :not(h2){display:none!important}
-</style>
 </head>
 <body>
 <div class="lock-screen" id="lockScreen">
 <div class="lock-box">
 <div class="lock-icon">🔐</div>
 <h2 style="font-family:Inter,sans-serif">Farina Bakery</h2>
-<p>Login karein</p>
-<input type="email" id="fbEmail" placeholder="Email" autocomplete="username">
-<input type="password" id="fbPass" placeholder="Password" autocomplete="current-password">
-<div class="err" id="fbErr"></div>
-<button id="fbLoginBtn">Login</button>
-<div id="modeSelectBox" style="display:none;margin-top:16px;padding-top:16px;border-top:1px dashed var(--rule)">
-<p style="color:var(--ink-soft);font-size:.85rem;margin:0 0 10px;text-align:center">Apna PIN daalein</p>
+<p id="lockSubtitle">Apna PIN daalein</p>
+<div id="pinLoginBox">
 <input type="password" id="loginPin" inputmode="numeric" maxlength="8" placeholder="••••" autocomplete="off" style="letter-spacing:8px;font-size:1.3rem">
 <button id="loginPinBtn" type="button">🔓 Open</button>
 </div>
-<div class="hint" style="margin-top:14px;color:#8a7a5f;font-size:.75rem">Internet na ho to login nahi hoga. Pehli baar login karke offline bhi use kar sakte hain.</div>
-<div class="hint" style="margin-top:10px;color:#E2603A;font-size:.75rem;font-weight:600">⚠️ Email aur password yaad rakhein.</div>
+<div id="pinSetupBox" style="display:none">
+<input type="password" id="setupPin1" inputmode="numeric" maxlength="8" placeholder="Naya Owner PIN (4-8 digits)" autocomplete="off">
+<input type="password" id="setupPin2" inputmode="numeric" maxlength="8" placeholder="PIN dobara likhein" autocomplete="off">
+<button id="setupPinBtn" type="button">💾 PIN Set Karein</button>
+</div>
+<div class="err" id="lockErr"></div>
 </div>
 </div>
 
@@ -345,7 +250,6 @@ label{line-height:1.4}
 <div id="sb-topbar"><button id="sb-ham" type="button" aria-label="Menu">☰</button><div id="sb-title">Dashboard</div></div>
 <div id="sb-overlay"></div>
 <header>
-<div class="sync-badge" id="syncBadge">⚪ Offline</div>
 <div id="userModeBadge" style="position:absolute;top:12px;left:12px;font-size:.7rem;padding:4px 10px;border-radius:12px;font-family:Inter,sans-serif;font-weight:700;background:#FFF1D6;border:1px solid #C9762A;color:#C9762A">👑 OWNER</div>
 <div style="position:absolute;top:46px;right:12px;display:flex;gap:6px">
 
@@ -940,11 +844,6 @@ label{line-height:1.4}
 </section>
 
 <section id="tab-settings" style="display:none">
-<div class="card"><h2>☁️ Cloud Sync</h2>
-<div class="hint" id="cloud-status">Status: Checking...</div>
-<button class="primary" id="manual-sync">🔄 Manual Sync Now</button>
-<button class="secondary" id="logout-btn" style="color:#E2603A;border-color:#E2603A">🚪 Logout</button>
-</div>
 <div class="card"><h2>Shop Settings</h2>
 <label>Shop Name</label><input type="text" id="s-name" placeholder="Al-Madina Bakery">
 <label>Address</label><input type="text" id="s-address" placeholder="Shop address">
@@ -952,7 +851,7 @@ label{line-height:1.4}
 <label>Shop Logo</label>
 <input type="file" id="s-logo" accept="image/*">
 <div class="hint">Logo upload karein (PNG/JPG, 500KB se kam). Yeh bill par print hoga.</div>
-<img id="logo-preview" src="data:," alt="Shop logo preview" style="display:none;max-width:120px;max-height:120px;margin-top:8px;border:1px solid var(--rule);border-radius:6px;padding:4px;background:#fff">
+<img id="logo-preview" style="display:none;max-width:120px;max-height:120px;margin-top:8px;border:1px solid var(--rule);border-radius:6px;padding:4px;background:#fff">
 <button class="secondary" id="remove-logo" style="display:none;margin-top:6px">🗑️ Remove Logo</button>
 <div class="row2">
 <div><label>Currency</label><input type="text" id="s-currency" placeholder="Rs." maxlength="5"></div>
@@ -1006,7 +905,7 @@ label{line-height:1.4}
 <div class="card"><h2>Backup Reminder</h2>
 <label><input type="checkbox" id="s-reminder" style="width:auto;margin-left:6px"> Remind me every 7 days</label>
 <div class="hint" id="last-backup-label">Last backup: Never</div>
-<div class="warn-box">⚠️ Data cloud par sync hota hai, lekin backup bhi rakhein.</div>
+<div class="warn-box">⚠️ Data sirf is device par hai — regular backup zaroor lein.</div>
 </div>
 <div class="card"><h2>Backup & Restore</h2>
 <div class="hint" style="margin-top:0">Backup ke liye JSON ya PDF file save karein.</div>
@@ -1063,7 +962,6 @@ label{line-height:1.4}
 <button class="secondary" id="change-cashier-pin-btn" style="margin-top:8px">💾 Cashier PIN Change</button>
 </div>
 </div>
-</div>
 <div class="card"><h2>🔑 Data Delete Code</h2>
 <div class="hint" style="margin-top:0">Yehi code Data Delete karne ke liye lagega. Waqt aane par yahan se change kar sakte hain.</div>
 <label>Purana Code</label><input type="password" id="old-code" inputmode="numeric" placeholder="Enter current code">
@@ -1073,11 +971,10 @@ label{line-height:1.4}
 </div>
 <button class="primary" id="change-code-btn">💾 Save New Code</button>
 </div>
-<div class="card"><h2>About</h2><div class="hint"><strong>Farina Bakery</strong><br>Data cloud + local dono mein mehfooz hai.</div></div>
+<div class="card"><h2>About</h2><div class="hint"><strong>Farina Bakery</strong><br>Data sirf is device par mehfooz hai. Regular backup zaroor lein.</div></div>
 </section>
 
 </main>
-</div>
 
 <div class="toast" id="toast"></div>
 <div id="print-region"></div>
@@ -1176,49 +1073,10 @@ label{line-height:1.4}
 })();
 </script>
 
-<script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-import { getFirestore, initializeFirestore, persistentLocalCache, persistentMultipleTabManager, doc, setDoc, getDoc, onSnapshot, collection, writeBatch } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
-import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js";
-
-const firebaseConfig = {
-  apiKey: "AIzaSyBlzHgZo7BBR6yQeBdio0hl3by6cEV1D-c",
-  authDomain: "farina-backery-c8a60.firebaseapp.com",
-  projectId: "farina-backery-c8a60",
-  storageBucket: "farina-backery-c8a60.firebasestorage.app",
-  messagingSenderId: "799907076733",
-  appId: "1:799907076733:web:8590b82f754ae50f5f6f14"
-};
-
-try {
-  const app = initializeApp(firebaseConfig);
-  let db;
-  try {
-    db = initializeFirestore(app, { localCache: persistentLocalCache({ tabManager: persistentMultipleTabManager() }) });
-  } catch (e) {
-    console.warn("Persistent cache nahi chala:", e);
-    db = getFirestore(app);
-  }
-  const auth = getAuth(app);
-  window._db = db;
-  window._auth = auth;
-  window._fb = { doc, setDoc, getDoc, onSnapshot, collection, writeBatch, signInWithEmailAndPassword, onAuthStateChanged, signOut };
-  console.log("✅ Firebase initialized");
-  window.dispatchEvent(new Event('firebase-ready'));
-} catch (e) {
-  console.error("❌ Firebase init failed:", e);
-}
-</script>
-
 <script>
 // ============================================
-// 🧩 CONSTANTS & DATA (v4.7)
+// 🧩 CONSTANTS & DATA (v4.9)
 // ============================================
-// Session timeout disabled: app use karte waqt khud logout nahi hogi.
-// Logout sirf Owner/Cashier ke manual Logout button se hoga.
-const SESSION_HOURS = Infinity;
-const SESSION_MS = Infinity;
-
 let items=[],entries=[],bills=[],customers=[],payments=[],production=[],expenses=[],nextCode=1001;
 let deletedItems=[],deletedEntries=[],deletedBills=[],deletedCustomers=[],deletedPayments=[],deletedProduction=[],deletedExpenses=[];
 let archivedBills = [];
@@ -1243,9 +1101,6 @@ let inventoryUnitFilter='';
 let currentExpenseRange='today';
 let currentTrashFilter='items';
 let tempLogoData='';
-let syncStatus='offline';
-let lastSyncError='', failStreak=0, nextPushAt=0;
-const badOps=new Map();
 let saveInProgress=false;
 window._loginInProgress = false;
 
@@ -1363,32 +1218,17 @@ document.addEventListener('DOMContentLoaded', function() {
 // 👤 USER MODE
 // ============================================
 let _sessionMode = null;
-let _serverRole = null;
-let _serverRoleLoaded = false;
 function getUserMode(){ return _sessionMode || localStorage.getItem('bakery-user-mode') || 'owner'; }
-async function loadServerRole(){
-  _serverRoleLoaded=false; _serverRole=null;
-  if(!window._fb||!window._db||!window._auth||!window._auth.currentUser||!navigator.onLine) return null;
-  try{
-    const ref=window._fb.doc(window._db,'shops','farina-main','users',window._auth.currentUser.uid);
-    const snap=await window._fb.getDoc(ref);
-    const role=String(snap.exists()?(snap.data()||{}).role||'':'').toLowerCase();
-    if(role==='owner'||role==='cashier') _serverRole=role;
-  }catch(e){ console.warn('Server role read failed:',e); }
-  _serverRoleLoaded=true;
-  return _serverRole;
-}
 function requireOwner(){
-  if(_serverRole==='cashier'||isCashier()){ toast('⚠️ Yeh sirf Owner kar sakta hai'); return false; }
-  if(navigator.onLine && _serverRoleLoaded && !_serverRole && !String(settings.ownerPin||'').trim()){ toast('❌ Firebase user role set nahi hai'); return false; }
-  if(!navigator.onLine && _serverRole!=='owner'){ toast('❌ Owner verification ke liye internet zaroori hai'); return false; }
+  if(isCashier()){ toast('⚠️ Yeh sirf Owner kar sakta hai'); return false; }
   return true;
 }
 function ownerDeleteCredential(value){
-  if(_serverRole==='owner') return true;
-  return !!String(settings.deleteCode||'').trim() && String(value||'').trim()===String(settings.deleteCode).trim();
+  const code=String(settings.deleteCode||'').trim();
+  if(!code){ toast('⚠️ Pehle Settings mein apna Delete Code set karein'); return false; }
+  return String(value||'').trim()===code;
 }
-function isCashier(){ return _serverRole==='cashier' || getUserMode() === 'cashier'; }
+function isCashier(){ return getUserMode() === 'cashier'; }
 function logCashierAction(action, details){
   if(!isCashier()) return;
   cashierLog.push({ time: Date.now(), action, details: details || '', mode: getUserMode() });
@@ -1400,112 +1240,26 @@ function validatePin(pin){ return /^\d{4,8}$/.test(String(pin || '').trim()); }
 // ============================================
 // 🔐 SESSION
 // ============================================
-function isSessionValid(){
-  return true;
-}
-function updateSyncBadge(){
-  const b=$('syncBadge'); if(!b) return;
-  b.title = lastSyncError || '';
-  const pending = localStorage.getItem('bakery-pending-sync')==='yes';
-  if(!navigator.onLine){ b.textContent='📴 No Internet'; b.className='sync-badge offline'; return; }
-  if(!window._auth || !window._auth.currentUser){ b.textContent='⚪ Login Zaroori'; b.className='sync-badge offline'; return; }
-  if(syncStatus==='online'){ b.textContent='☁️ Synced'; b.className='sync-badge online'; }
-  else if(syncStatus==='syncing'){ b.textContent='⏳ Syncing...'; b.className='sync-badge syncing'; }
-  else if(syncStatus==='error'){ b.textContent='⚠️ Sync Error — tap'; b.className='sync-badge offline'; }
-  else if(pending){ b.textContent='📤 Pending Sync'; b.className='sync-badge syncing'; }
-  else { b.textContent='☁️ Ready'; b.className='sync-badge online'; }
-}
-
-// ============================================
-// 📱 SHOW APP / LOGIN
-// ============================================
 async function showApp(){
   $('lockScreen').style.display = 'none';
   $('appDiv').style.display = 'block';
   try { await loadData(); } catch(e){ console.warn('Load error:', e); renderAll(); }
   applyUserMode();
-  if(window._auth && window._auth.currentUser && navigator.onLine){
-    setTimeout(()=>{ try { startRealtimeSync(); } catch(e){} }, 400);
-  }
   setTimeout(updateDraftBox, 600);
 }
 function showLogin(){
   $('lockScreen').style.display='flex';
   $('appDiv').style.display='none';
-  const btn = $('fbLoginBtn'), em = $('fbEmail'), pw = $('fbPass'), ms = $('modeSelectBox');
-  if(btn) btn.style.display='block';
-  if(em) em.style.display='block';
-  if(pw) pw.style.display='block';
-  if(ms) ms.style.display='none';
-}
-async function enterWithServerRole(role){
-  if(role!=='owner'&&role!=='cashier') return false;
-  _sessionMode=role;
-  try { localStorage.setItem('bakery-user-mode',role); } catch(e) {}
-  window._loginInProgress=true;
-  $('modeSelectBox').style.display='none';
-  $('fbErr').textContent='☁️ Role verified — app load ho rahi hai...';
-  await showApp();
-  window._loginInProgress=false;
-  if(role==='cashier') logCashierAction('LOGIN','Cashier login hua');
-  toast(role==='owner'?'👑 Owner mode active':'👤 Cashier mode active');
-  return true;
-}
-function waitForFirebase(cb){
-  if(window._fb){ cb(); return; }
-  const t0=Date.now();
-  const iv=setInterval(()=>{
-    if(window._fb){ clearInterval(iv); cb(); }
-    else if(Date.now()-t0>3000){ clearInterval(iv); cb(); }
-  },200);
+  const hasOwner=!!String(settings.ownerPin||'').trim();
+  $('pinLoginBox').style.display=hasOwner?'block':'none';
+  $('pinSetupBox').style.display=hasOwner?'none':'block';
+  $('lockSubtitle').textContent=hasOwner?'Apna PIN daalein':'Pehli baar: apna Owner PIN set karein';
+  $('lockErr').textContent='';
 }
 
 // ============================================
-// 🔑 LOGIN HANDLERS
+// 🔑 PIN LOGIN
 // ============================================
-$('fbLoginBtn').onclick=async()=>{
-  const email=$('fbEmail').value.trim();
-  const pass=$('fbPass').value;
-  if(!email||!pass){$('fbErr').textContent='Email aur password dono daalein';return}
-  $('fbLoginBtn').textContent='Logging in...';
-  $('fbErr').textContent='';
-  waitForFirebase(async()=>{
-    try{
-      if(!window._fb||!window._auth){
-        $('fbErr').textContent='❌ Internet nahi hai — login nahi ho sakta';
-        $('fbLoginBtn').textContent='Login';
-        return;
-      }
-      await window._fb.signInWithEmailAndPassword(window._auth,email,pass);
-      const role=await loadServerRole();
-      if(role){ await enterWithServerRole(role); $('fbLoginBtn').textContent='Login'; return; }
-      $('fbErr').textContent='';
-      try {
-        localStorage.setItem('bakery-logged-in','yes');
-        localStorage.setItem('bakery-login-time', Date.now().toString());
-      } catch(e){}
-      $('fbLoginBtn').style.display='none';
-      $('fbEmail').style.display='none';
-      $('fbPass').style.display='none';
-      $('modeSelectBox').style.display='none';
-      $('fbErr').textContent='☁️ Latest settings load ho rahi hain...';
-      const cloudSettingsOk=await refreshCloudSettingsBeforePin();
-      $('modeSelectBox').style.display=cloudSettingsOk?'block':'none';
-      $('fbErr').textContent=cloudSettingsOk?'✅ Login successful! Ab PIN daalein':'⚠️ Cloud PIN load nahi hua. Internet/Firebase rules check karein aur page reload karke dobara try karein.';
-    }catch(e){
-      let m='Login fail';
-      if(e.code==='auth/wrong-password'||e.code==='auth/invalid-credential')m='❌ Password galat';
-      else if(e.code==='auth/user-not-found')m='❌ User nahi mila';
-      else if(e.code==='auth/invalid-email')m='❌ Email galat';
-      else if(e.code==='auth/network-request-failed')m='❌ Internet nahi hai';
-      else m='❌ '+e.message;
-      $('fbErr').textContent=m;
-    }
-    $('fbLoginBtn').textContent='Login';
-  });
-};
-
-// ✅ PIN password box mein
 async function askPin(t){
   const r = await promptBox(t,[{label:'PIN',type:'password',placeholder:'••••'}],'OK');
   return r ? String(r[0]||'').trim() : null;
@@ -1519,101 +1273,42 @@ async function loginWithPin(pin){
   if(!mode) return false;
   if(window._loginInProgress) return true;
   _sessionMode=mode;
-  localStorage.setItem('bakery-user-mode',mode);
+  try{ localStorage.setItem('bakery-user-mode',mode); }catch(e){}
   window._loginInProgress=true;
-  $('modeSelectBox').style.display='none';
   $('loginPin').value='';
   await showApp();
   window._loginInProgress=false;
   if(mode==='cashier')logCashierAction('LOGIN','Cashier login hua');
-  setTimeout(()=>{try{startRealtimeSync()}catch(x){}try{tryAutoSync()}catch(x){}},800);
   toast(mode==='owner'?'👑 Owner mode active':'👤 Cashier mode active');
   return true;
 }
-// Sahi PIN likhte hi (ya Open dabate hi) website seedha khul jaye
+// Sahi PIN likhte hi (ya Open dabate hi) app khul jaye
 $('loginPin').addEventListener('input',()=>{
   const v=$('loginPin').value.trim();
   const pins=[String(settings.ownerPin||''),String(settings.cashierPin||'')];
-  // agar typed PIN kisi lambe PIN ka shuru hai to Enter/Open ka intezar karo
   if(pins.some(p=>p!==v&&p.startsWith(v))) return;
   loginWithPin(v);
 });
 $('loginPin').addEventListener('keydown',async e=>{ if(e.key==='Enter'){ e.preventDefault(); if(!await loginWithPin($('loginPin').value)){ toast('❌ PIN galat'); $('loginPin').value=''; } } });
 $('loginPinBtn').onclick=async()=>{ if(!await loginWithPin($('loginPin').value)){ toast('❌ PIN galat'); $('loginPin').value=''; } };
 
-$('fbPass').addEventListener('keydown',e=>{if(e.key==='Enter')$('fbLoginBtn').click()});
-$('fbEmail').addEventListener('keydown',e=>{if(e.key==='Enter')$('fbPass').focus()});
-
-// ============================================
-// 🔐 AUTH STATE
-// ============================================
-// PINs localStorage mein cached hain, isliye har login se pehle Firebase se
-// latest shared settings lao. Sirf settings merge karo; local business data ko
-// is pre-login refresh mein overwrite na karo.
-async function refreshCloudSettingsBeforePin(){
-  if(!window._fb || !window._db || !window._auth || !window._auth.currentUser) return false;
-  // Offline mode mein isi device ka cached PIN allow hai; cloud updates ke liye online refresh zaroori hai.
-  if(!navigator.onLine) return true;
-  try{
-    const ref=window._fb.doc(window._db,'shops','farina-main','meta','settings');
-    const snap=await window._fb.getDoc(ref);
-    if(!snap.exists()) return true; // Naya Firebase account: initial PIN defaults allowed
-    const d=snap.data()||{}, incoming=d.settings||{};
-    Object.keys(incoming).forEach(key=>{
-      const val=incoming[key];
-      if(val===null||val===undefined) return;
-      if((key==='cashierPin'||key==='ownerPin'||key==='deleteCode')&&String(val).trim()==='') return;
-      settings[key]=val;
-    });
-    if(!settings.cashierPin) settings.cashierPin='';
-    if(!settings.ownerPin) settings.ownerPin='';
-    if(!settings.deleteCode) settings.deleteCode='';
-    nextCode=Math.max(Number(nextCode)||1001,Number(d.nextCode)||1001);
-    try{
-      const saved=JSON.parse(localStorage.getItem('bakery-data')||'{}');
-      saved.settings={...(saved.settings||{}),...settings};
-      saved.nextCode=nextCode;
-      localStorage.setItem('bakery-data',JSON.stringify(saved));
-      if(d.updatedAt) localStorage.setItem('bakery-meta-ts',String(d.updatedAt));
-    }catch(e){ console.warn('Cloud settings local cache update failed:',e); }
-    return true;
-  }catch(e){
-    console.warn('Latest cloud PIN/settings read failed:',e);
-    lastSyncError=(e&&e.code)||e.message||'Cloud settings read failed';
-    return false;
-  }
-}
-
-waitForFirebase(()=>{
-  if(!window._fb || !window._auth){ showLogin(); return; }
-  window._fb.onAuthStateChanged(window._auth,user=>{
-    if(window._loginInProgress) return;
-    if(user){
-      if(!isSessionValid()) try { localStorage.setItem('bakery-login-time', Date.now().toString()); } catch(e){}
-      try { localStorage.setItem('bakery-logged-in','yes'); } catch(e){}
-      try { localStorage.removeItem('bakery-user-mode'); } catch(e){}
-      $('lockScreen').style.display = 'flex';
-      $('fbLoginBtn').style.display = 'none';
-      $('fbEmail').style.display = 'none';
-      $('fbPass').style.display = 'none';
-      $('modeSelectBox').style.display = 'none';
-      $('fbErr').textContent = '☁️ Latest settings load ho rahi hain...';
-      loadServerRole().then(role=>{ if(role) enterWithServerRole(role); });
-      refreshCloudSettingsBeforePin().then(ok=>{
-        if(!window._auth || !window._auth.currentUser) return;
-        $('modeSelectBox').style.display = ok ? 'block' : 'none';
-        $('fbErr').textContent = ok ? '✅ Logged in — PIN daalein' : '⚠️ Cloud PIN load nahi hua. Internet/Firebase rules check karein aur page reload karke dobara try karein.';
-      });
-    } else {
-      if(realtimeUnsubscribe){ try { realtimeUnsubscribe(); } catch(e){} realtimeUnsubscribe = null; }
-      try { localStorage.removeItem('bakery-user-mode'); } catch(e){}
-      showLogin();
-    }
-  });
-});
-
-// Auto session-expiry timer intentionally removed. App active rahegi jab tak
-// user khud Logout na kare ya Firebase account manually sign out na ho.
+// Pehli baar Owner PIN set karna (jab koi PIN pehle se na ho)
+$('setupPinBtn').onclick=async()=>{
+  const p1=$('setupPin1').value.trim(), p2=$('setupPin2').value.trim();
+  if(!validatePin(p1)){ $('lockErr').textContent='⚠️ PIN 4-8 digits ka hona chahiye'; return; }
+  if(p1!==p2){ $('lockErr').textContent='⚠️ Dono PIN match nahi karte'; return; }
+  if(window._loginInProgress) return;
+  _sessionMode='owner';
+  try{ localStorage.setItem('bakery-user-mode','owner'); }catch(e){}
+  window._loginInProgress=true;
+  await showApp();               // pehle saved data load hota hai
+  settings.ownerPin=p1;
+  await saveData();
+  window._loginInProgress=false;
+  $('setupPin1').value=''; $('setupPin2').value=''; $('lockErr').textContent='';
+  toast('✅ Owner PIN set ho gaya');
+};
+$('setupPin2').addEventListener('keydown',e=>{ if(e.key==='Enter'){ e.preventDefault(); $('setupPinBtn').click(); } });
 
 // ============================================
 // 👤 APPLY USER MODE
@@ -1621,7 +1316,7 @@ waitForFirebase(()=>{
 function applyUserMode(){
   const mode = getUserMode();
   const cashier = (mode === 'cashier');
-  const cashierTabs = ['dashboard','bill','customers'];
+  const cashierTabs = ['dashboard','bill','expense','customers'];
   // Owner ko dashboard widgets dikhte hain, Cashier ko nahi.
   document.querySelectorAll('[data-owner-only-dashboard]').forEach(el=>{
     el.style.display = cashier ? 'none' : '';
@@ -1664,30 +1359,14 @@ function applyCashierRestrictions(cashier){
   let style = document.getElementById('cashier-style');
   if(!style){ style = document.createElement('style'); style.id='cashier-style'; document.head.appendChild(style); }
   if(cashier){
-    style.textContent = `[data-softdelbill], [data-exchange], [data-void], [data-softdelcust], [data-softdel], [data-edit] { display: none !important; } #bulk-delete-bills, #bulk-delete-customers, #bulk-delete-expenses, #bulk-unit-set, #cashier-backup-card, #backup-data, #backup-pdf, #restore-data, #share-report-json, #share-report-pdf { display: none !important; }`;
+    style.textContent = `[data-softdelbill], [data-exchange], [data-void], [data-softdelcust], [data-softdel], [data-edit] { display: none !important; } #bulk-delete-bills, #bulk-delete-customers, #bulk-delete-expenses, #bulk-unit-set { display: none !important; }`;
   } else { style.textContent = ''; }
 }
 
 async function headerLogoutHandler(){
-  if(!confirm('Kya aap logout karna chahte hain?\n\nData cloud par safe rahega.')) return;
+  if(!confirm('Kya aap logout karna chahte hain?\n\nData is device par safe rahega.')) return;
   try { if(isCashier()) logCashierAction('LOGOUT', 'Logout kiya'); } catch(e){}
-  try {
-    if(window._fb && window._auth && window._auth.currentUser){
-      await window._fb.signOut(window._auth);
-    }
-  } catch(e){}
-  try {
-    localStorage.removeItem('bakery-logged-in');
-    localStorage.removeItem('bakery-login-time');
-    localStorage.removeItem('bakery-pending-sync');
-    localStorage.removeItem('bakery-user-mode');
-    localStorage.removeItem('bakery-data');
-    localStorage.removeItem('bakery-data-time');
-    localStorage.removeItem('bakery-sync-hash');
-    localStorage.removeItem('bakery-meta-ts');
-    localStorage.removeItem('bakery-draft');
-    localStorage.removeItem('bakery-cashier-log');
-  } catch(e){}
+  try { localStorage.removeItem('bakery-user-mode'); } catch(e){}
   _sessionMode=null;
   toast('🚪 Logout ho gaya');
   setTimeout(()=>{ location.reload(); }, 400);
@@ -1841,31 +1520,9 @@ function nextBillNo(){
 }
 
 // ============================================
-// ☁️ SYNC
+// 💾 LOCAL DATA
 // ============================================
-const SYNC_TYPES=['items','entries','bills','customers','payments','production','expenses'];
-const ALL_SYNC_TYPES=[...SYNC_TYPES,...TRASH_TYPES,...ARCHIVE_TYPES];
-
-let syncHash={};
-try{syncHash=JSON.parse(localStorage.getItem('bakery-sync-hash')||'{}')}catch(e){syncHash={}}
-ALL_SYNC_TYPES.forEach(t=>{if(!syncHash[t])syncHash[t]={}});
-
-let syncReady=false,pushing=false,pushAgain=false,inflight=0,renderTimer=null;
-let unsubs=[],realtimeUnsubscribe=null;
-
-function markPendingChange(type, record, action = 'upsert') {
-  invalidateStockCache();
-  try { localStorage.setItem('bakery-pending-sync', 'yes'); } catch(e){}
-}
-try { localStorage.removeItem('bakery-pending-changes'); } catch(e) {}
-
-function canon(v){
-  if(Array.isArray(v))return '['+v.map(canon).join(',')+']';
-  if(v&&typeof v==='object')return '{'+Object.keys(v).filter(k=>v[k]!==undefined).sort().map(k=>JSON.stringify(k)+':'+canon(v[k])).join(',')+'}';
-  return JSON.stringify(v===undefined?null:v);
-}
-function syncH(o){const s=canon(o);let x=5381;for(let i=0;i<s.length;i++)x=((x<<5)+x+s.charCodeAt(i))|0;return x+':'+s.length}
-function saveHash(){try{localStorage.setItem('bakery-sync-hash',JSON.stringify(syncHash))}catch(e){}}
+function markPendingChange(){ invalidateStockCache(); }
 
 function getArr(t){
   return({items,entries,bills,customers,payments,production,expenses,deletedItems,deletedEntries,deletedBills,deletedCustomers,deletedPayments,deletedProduction,deletedExpenses,archivedBills})[t];
@@ -1882,7 +1539,6 @@ function setArr(t,v){
   }
   invalidateStockCache();
 }
-function metaHash(){const s={...settings};delete s.logo;return syncH({s,n:nextCode,ubn:usedBillNumbers})}
 
 function persistLocal(){
   try{
@@ -1903,7 +1559,7 @@ function persistLocal(){
   }
 }
 
-let isUserTyping=false,userTypingTimer=null;
+let isUserTyping=false,userTypingTimer=null,renderTimer=null;
 document.addEventListener('input',e=>{
   if(e.target&&e.target.matches&&e.target.matches('input,select,textarea')){
     isUserTyping=true;clearTimeout(userTypingTimer);
@@ -1919,249 +1575,7 @@ function scheduleRender(){
 }
 
 async function saveData(){
-  const localOk = persistLocal();
-  if(!localOk){
-    syncStatus='error'; updateSyncBadge();
-    return false;
-  }
-  if(!window._fb||!window._auth||!window._auth.currentUser||!navigator.onLine){
-    try { localStorage.setItem('bakery-pending-sync','yes'); } catch(e){}
-    syncStatus='offline';updateSyncBadge();return true;
-  }
-  try {
-    await pushChanges();
-    // Local save ho chuka hai; cloud error ki surat mein pending-sync retry hoga.
-    // Isay false na karein, warna bill/restore ka valid local data rollback ho jayega.
-    return true;
-  } catch(e) {
-    console.warn('Sync error:', e);
-    syncStatus='error';
-    updateSyncBadge();
-    return true;
-  }
-}
-
-// v4.8: hardened push — ek kharab record baqi sab ko block nahi karta, slow net par hang nahi hota, retry backoff ke saath
-const COMMIT_TIMEOUT_MS=25000, MAX_COMMITS_PER_PUSH=60, BAD_OP_MS=10*60*1000;
-const TRANSIENT_CODES=['unavailable','deadline-exceeded','cancelled','aborted','internal','timeout','network-request-failed'];
-const GLOBAL_CODES=['permission-denied','unauthenticated'];
-function opKey(o){return o.m?('m:'+o.m):(o.t+'/'+o.id)}
-function isBadOp(key,hash,now){const b=badOps.get(key);return !!b&&b.hash===hash&&b.until>now}
-function opRef(o){return o.m?window._fb.doc(window._db,'shops','farina-main','meta',o.m):window._fb.doc(window._db,'shops','farina-main',o.t,o.id)}
-function commitWithTimeout(part){
-  const batch=window._fb.writeBatch(window._db);
-  part.forEach(o=>batch.set(opRef(o),o.data));
-  let timer;
-  const to=new Promise((_,rej)=>{timer=setTimeout(()=>{const e=new Error('Internet slow hai');e.code='timeout';rej(e)},COMMIT_TIMEOUT_MS)});
-  return Promise.race([batch.commit(),to]).finally(()=>clearTimeout(timer));
-}
-async function commitPart(part,budget){
-  const out={ok:[],bad:[],transient:false,err:null};
-  if(budget.n<=0){out.transient=true;return out}
-  budget.n--;
-  try{ await commitWithTimeout(part); out.ok=part; return out; }
-  catch(e){
-    const code=(e&&e.code)||'error'; out.err=e;
-    if(TRANSIENT_CODES.includes(code)){ out.transient=true; return out; }
-    if(part.length===1){ out.bad=part.map(op=>({op,err:e})); return out; }
-    if(GLOBAL_CODES.includes(code)){
-      // Rules collection-wise lagte hain: pehle collection ke hisaab se alag karo
-      const groups={}; part.forEach(o=>{ const k=o.m?'meta':o.t; (groups[k]=groups[k]||[]).push(o); });
-      const keys=Object.keys(groups);
-      if(keys.length===1){ out.bad=part.map(op=>({op,err:e})); return out; }
-      const res=[]; for(const k of keys) res.push(await commitPart(groups[k],budget));
-      return {ok:res.flatMap(r=>r.ok),bad:res.flatMap(r=>r.bad),transient:res.some(r=>r.transient),err:(res.find(r=>r.err)||{}).err||e};
-    }
-    const mid=Math.ceil(part.length/2);
-    const x=await commitPart(part.slice(0,mid),budget);
-    const y=await commitPart(part.slice(mid),budget);
-    return {ok:[...x.ok,...y.ok],bad:[...x.bad,...y.bad],transient:x.transient||y.transient,err:x.err||y.err};
-  }
-}
-
-async function pushChanges(force){
-  if(!syncReady||!navigator.onLine||!window._fb||!window._auth||!window._auth.currentUser){updateSyncBadge();return}
-  if(force!==true&&Date.now()<nextPushAt){updateSyncBadge();return}
-  if(pushing){pushAgain=true;return}
-  pushing=true;
-  let transient=false,hadBad=false,attempted=false;
-  try{
-    do{
-      pushAgain=false;
-      const ops=[],now0=Date.now();
-      ALL_SYNC_TYPES.forEach(t=>{
-        const seen=new Set();
-        getArr(t).forEach(r=>{
-          if(!r||!r.id)return;
-          seen.add(r.id);
-          const hh=syncH(r);
-          if(syncHash[t][r.id]!==hh&&!isBadOp(t+'/'+r.id,hh,now0))ops.push({t,id:r.id,hash:hh,data:JSON.parse(JSON.stringify(r))});
-        });
-        Object.keys(syncHash[t]).forEach(id=>{
-          if(!seen.has(id)&&syncHash[t][id]!=='del'&&!isBadOp(t+'/'+id,'del',now0))
-            ops.push({t,id,hash:'del',data:{id,deleted:true,updatedAt:Date.now(),updatedBy:DEVICE_ID}});
-        });
-      });
-      const now=Date.now(),mh=metaHash();
-      if(syncHash.meta!==mh&&!isBadOp('m:settings',mh,now0)){
-        const s={...settings};delete s.logo;
-        ops.push({m:'settings',hash:mh,data:{settings:s,nextCode,usedBillNumbers,updatedAt:now,updatedBy:DEVICE_ID}});
-        try { localStorage.setItem('bakery-meta-ts',String(now)); } catch(e){}
-      }
-      if(settings.logo && String(settings.logo).trim() !== ''){
-        const lh=syncH(settings.logo);
-        if(syncHash.logo!==lh&&!isBadOp('m:logo',lh,now0)){
-          ops.push({m:'logo',hash:lh,data:{data:settings.logo,updatedAt:now,updatedBy:DEVICE_ID}});
-        }
-      }
-      if(!ops.length)break;
-      attempted=true;
-      const budget={n:MAX_COMMITS_PER_PUSH};
-      for(let i=0;i<ops.length;i+=400){
-        const part=ops.slice(i,i+400);
-        try { localStorage.setItem('bakery-pending-sync','yes'); } catch(e){}
-        syncStatus='syncing';updateSyncBadge();
-        const res=await commitPart(part,budget);
-        res.ok.forEach(o=>{ if(o.m)syncHash[o.m==='settings'?'meta':'logo']=o.hash;else syncHash[o.t][o.id]=o.hash; badOps.delete(opKey(o)); });
-        res.bad.forEach(({op,err})=>{
-          const code=(err&&err.code)||'error';
-          badOps.set(opKey(op),{hash:op.hash,until:Date.now()+BAD_OP_MS,code,col:(op.m?'meta':op.t)});
-          hadBad=true;
-          console.warn('Sync bad doc:',opKey(op),err);
-        });
-        if(res.transient){ transient=true; lastSyncError=(res.err&&res.err.code==='timeout')?'Internet slow':'Network issue'; }
-        saveHash();
-        if(transient)break;
-      }
-      if(transient)break;
-    }while(pushAgain);
-  }finally{pushing=false}
-  const now1=Date.now();
-  const activeList=[...badOps.values()].filter(v=>v.until>now1);
-  const activeBad=activeList.length;
-  if(activeBad){
-    const codes=[...new Set(activeList.map(v=>v.code))].join(', ');
-    const cols=[...new Set(activeList.map(v=>v.col))].join(', ');
-    lastSyncError=codes+': '+cols+(codes.indexOf('permission-denied')>-1?' — Firebase Rules mein write allow karein':'');
-  }
-  if(transient){
-    failStreak++; nextPushAt=now1+Math.min(300000,8000*Math.pow(2,failStreak));
-    try{localStorage.setItem('bakery-pending-sync','yes')}catch(e){}
-    syncStatus='pending';
-  } else if(hadBad||activeBad){
-    if(attempted){ failStreak++; nextPushAt=now1+Math.min(300000,8000*Math.pow(2,failStreak)); }
-    try{localStorage.setItem('bakery-pending-sync','yes')}catch(e){}
-    syncStatus='error';
-  } else {
-    failStreak=0; nextPushAt=0; lastSyncError='';
-    try{localStorage.removeItem('bakery-pending-sync')}catch(e){}
-    syncStatus='online';
-  }
-  updateSyncBadge();
-}
-
-async function tryAutoSync(){await pushChanges()}
-
-const GHOST_PAIRS=[['items','deletedItems'],['entries','deletedEntries'],['bills','deletedBills'],['customers','deletedCustomers'],['payments','deletedPayments'],['production','deletedProduction'],['expenses','deletedExpenses']];
-function reconcileGhosts(){
-  let any=false;
-  GHOST_PAIRS.forEach(([a,d])=>{
-    const act=getArr(a),tr=getArr(d); if(!act.length||!tr.length)return;
-    const tm=new Map(tr.map(r=>[r.id,Number(r.updatedAt)||0]));
-    const keep=act.filter(r=>!(tm.has(r.id)&&tm.get(r.id)>=(Number(r.updatedAt)||0)));
-    if(keep.length!==act.length){setArr(a,keep);any=true}
-  });
-  if(any){persistLocal();scheduleRender();pushChanges()}
-}
-function applyRemote(t,snap){
-  const ch=snap.docChanges().filter(c=>c.type!=='removed'&&!c.doc.metadata.hasPendingWrites);
-  if(!ch.length){reconcileGhosts();return}
-  const list=getArr(t).slice(),idx=new Map(list.map((r,i)=>[r.id,i])),drop=new Set();
-  let changed=false;
-  ch.forEach(c=>{
-    const d=c.doc.data(),id=c.doc.id,i=idx.get(id);
-    const cu=Number(d.updatedAt)||0,lu=i===undefined?-1:(Number(list[i].updatedAt)||0);
-    if(d.deleted){
-      if(i!==undefined&&cu>=lu){drop.add(id);changed=true}
-      syncHash[t][id]='del';return;
-    }
-    if(i===undefined){idx.set(id,list.length);list.push(d);changed=true;syncHash[t][id]=syncH(d);return}
-    if(cu>lu){list[i]=d;changed=true;syncHash[t][id]=syncH(d)}
-    else if(syncH(list[i])===syncH(d))syncHash[t][id]=syncH(d);
-  });
-  saveHash();
-  if(!changed){reconcileGhosts();return}
-  setArr(t,drop.size?list.filter(r=>!drop.has(r.id)):list);
-  persistLocal();scheduleRender();reconcileGhosts();
-}
-
-// ✅ FIX #9: Empty string allowed, sirf PIN fields protect
-function applyMeta(snap){
-  snap.docChanges().forEach(c=>{
-    if(c.type==='removed'||c.doc.metadata.hasPendingWrites)return;
-    const d=c.doc.data();
-    if(c.doc.id==='settings'){
-      if(d.updatedBy===DEVICE_ID)return;
-      const mine=Number(localStorage.getItem('bakery-meta-ts'))||0;
-      if((Number(d.updatedAt)||0)>mine){
-        const logo=settings.logo;
-        const incoming = d.settings || {};
-        Object.keys(incoming).forEach(key => {
-          const val = incoming[key];
-          if(val === null || val === undefined) return;
-          if((key === 'cashierPin' || key === 'ownerPin' || key === 'deleteCode') && String(val).trim() === ''){
-            return;
-          }
-          settings[key] = val;
-        });
-        settings.logo = logo;
-        if(!settings.deleteCode)settings.deleteCode='';
-        if(!settings.cashierPin)settings.cashierPin='';
-        if(!settings.ownerPin)settings.ownerPin='';
-        if(settings.cashierMaxDiscount==null)settings.cashierMaxDiscount=20;
-        nextCode=Math.max(Number(nextCode)||1001,Number(d.nextCode)||1001);
-        if(d.usedBillNumbers && Array.isArray(d.usedBillNumbers)){
-          usedBillNumbers=[...new Set([...usedBillNumbers,...d.usedBillNumbers])];
-          if(usedBillNumbers.length > 500) usedBillNumbers = usedBillNumbers.slice(-500);
-        }
-        try { localStorage.setItem('bakery-meta-ts',String(d.updatedAt)); } catch(e){}
-        syncHash.meta=metaHash();persistLocal();scheduleRender();
-      }
-    }else if(c.doc.id==='logo'){
-      if(d.updatedBy===DEVICE_ID)return;
-      const lg = d.data || '';
-      if(!lg || String(lg).trim() === ''){ return; }
-      if(lg !== (settings.logo||'')){ 
-        settings.logo = lg; 
-        persistLocal(); 
-        scheduleRender(); 
-      }
-      syncHash.logo = syncH(lg);
-    }
-  });
-  saveHash();
-}
-
-function startRealtimeSync(){
-  if(!window._fb||!window._auth||!window._auth.currentUser){ return; }
-  if(!navigator.onLine){ return; }
-  if(unsubs.length){ return; }
-  let first=0;const need=ALL_SYNC_TYPES.length+1;
-  const ready=()=>{if(++first===need){syncReady=true;pushChanges()}};
-  const onErr=e=>{console.warn('Listener error:',e);syncStatus='error';updateSyncBadge()};
-  ALL_SYNC_TYPES.forEach(t=>{
-    let seen=false;
-    unsubs.push(window._fb.onSnapshot(window._fb.collection(window._db,'shops','farina-main',t),snap=>{
-      applyRemote(t,snap);
-      if(!seen){seen=true;ready()}
-    },onErr));
-  });
-  let seenMeta=false;
-  unsubs.push(window._fb.onSnapshot(window._fb.collection(window._db,'shops','farina-main','meta'),snap=>{
-    applyMeta(snap);
-    if(!seenMeta){seenMeta=true;ready()}
-  },onErr));
-  realtimeUnsubscribe=()=>{unsubs.forEach(u=>{try{u()}catch(e){}});unsubs=[];syncReady=false};
+  return persistLocal();
 }
 
 // ============================================
@@ -2186,7 +1600,7 @@ function migrateData(){
     });
   });
   deletedBills.forEach(b=>{ (b.lines||[]).forEach(l=>{ delete l.boxQty; delete l.packetQty; delete l.pieceQty; }); });
-  console.log('✅ Data migrated to v4.7');
+  console.log('✅ Data migrated to v4.9');
 }
 
 // ✅ FIX #9: Empty string allowed in savedSettings
@@ -2220,22 +1634,8 @@ async function loadData(){
     migrateData();
   }catch(e){console.warn('Local data load fail:',e)}
   renderAll();
-  if(!window._fb||!window._auth||!window._auth.currentUser){ syncStatus='offline'; updateSyncBadge(); checkBackupReminder(); return; }
-  startRealtimeSync();
   checkBackupReminder();
 }
-
-setInterval(()=>{
-  if(window._auth && window._auth.currentUser && navigator.onLine){
-    if(!syncReady){ try { startRealtimeSync(); } catch(e){} }
-    else { tryAutoSync(); }
-  }
-  updateSyncBadge();
-}, 8000);
-
-window.addEventListener('online', ()=>{ nextPushAt=0; toast('🌐 Internet wapas'); setTimeout(()=>{ startRealtimeSync(); tryAutoSync(); }, 1500); });
-window.addEventListener('offline', ()=>{ toast('📴 Offline mode'); syncStatus='offline'; updateSyncBadge(); });
-setTimeout(()=>{ if(window._auth && window._auth.currentUser) { startRealtimeSync(); tryAutoSync(); } }, 3000);
 
 // ============================================
 // 🎯 TAB SWITCHING
@@ -2245,7 +1645,7 @@ function showTab(tab){
   if(tab==='expiry'){tab='lowstock';sub=['alert','expiry'];}
   else if(tab==='archive'){tab='trash';sub=['trash','archive'];}
   if(isCashier()){
-    const cashierTabs = ['dashboard','bill','customers'];
+    const cashierTabs = ['dashboard','bill','expense','customers'];
     if(!cashierTabs.includes(tab)){ toast('⚠️ Cashier ke liye yeh section available nahi'); return; }
   }
   document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('active',b.dataset.tab===tab));
@@ -3652,7 +3052,6 @@ function renderExpenses(){
 }
 document.querySelectorAll('[data-xrange]').forEach(b=>b.onclick=()=>{document.querySelectorAll('[data-xrange]').forEach(x=>x.classList.remove('active'));b.classList.add('active');currentExpenseRange=b.dataset.xrange;renderExpenses()});
 $('save-expense').onclick=()=>{
-  if(!requireOwner()) return;
   const date=$('x-date').value,category=$('x-category').value,amount=Number($('x-amount').value)||0;
   if(!date){toast('Select date');return}
   if(amount<=0){toast('Enter amount');return}
@@ -4202,14 +3601,14 @@ $('save-settings').onclick=()=>{
   settings.currency = $('s-currency').value.trim() || 'Rs.';
   settings.footer = $('s-footer').value.trim();
   const ls = Number($('s-lowstock').value);
-  if(Number.isFinite(ls) && ls >= 0) settings.lowstock = ls;
+  if(ls > 0) settings.lowstock = ls;
   
   settings.printer = $('s-printer').value || settings.printer || '80';
   settings.reminder = $('s-reminder').checked;
   if(tempLogoData) settings.logo = tempLogoData;
   else if(tempLogoData === '' && !$('logo-preview').src){ settings.logo = ''; }
   
-  try { localStorage.setItem('bakery-meta-ts', String(Date.now())); } catch(e){}
+  
   saveData();
   renderAll();
   updateHeaderShopInfo();
@@ -4259,7 +3658,6 @@ function validateBackupPayload(p){
 }
 
 $('restore-data').onclick=async()=>{
-  if(!requireOwner()) return;
   if(!await confirmBox('Restore Backup?','Mojooda data backup file se replace ho jayega.','Continue')) return;
   try{ downloadTextFile(JSON.stringify(getFullBackupData()),'safety-before-restore-'+today()+'.json','application/json'); }catch(e){}
   $('restore-file').click();
@@ -4269,7 +3667,7 @@ $('restore-file').onchange=e=>{
   if(f.size>25*1024*1024){ toast('❌ Backup file 25MB se chhoti honi chahiye'); e.target.value=''; return; }
   const r=new FileReader();
   let beforeRestore=null;
-  try { beforeRestore=JSON.parse(JSON.stringify(getFullBackupData())); } catch(_) {}
+  try { beforeRestore=JSON.parse(JSON.stringify(getFullBackupData(true))); } catch(_) {}
   r.onload=async()=>{
     try{
       const p=JSON.parse(r.result);
@@ -4288,9 +3686,7 @@ $('restore-file').onchange=e=>{
       Object.keys(incoming).forEach(key => {
         const val = incoming[key];
         if(val === null || val === undefined) return;
-        if((key === 'cashierPin' || key === 'ownerPin' || key === 'deleteCode') && String(val).trim() === ''){
-          return;
-        }
+        if(key === 'cashierPin' || key === 'ownerPin' || key === 'deleteCode') return; // backup se PIN/code kabhi nahi badalte
         settings[key] = val;
       });
       
@@ -4322,35 +3718,30 @@ $('restore-file').onchange=e=>{
 // ============================================
 // 💰 BACKUP FUNCTIONS
 // ============================================
-function getFullBackupData() {
-  // Never export authentication credentials in a backup file. On restore,
-  // the current device PINs remain unchanged because these keys are omitted.
-  const backupSettings = { ...settings };
-  delete backupSettings.ownerPin;
-  delete backupSettings.cashierPin;
-  delete backupSettings.deleteCode;
-  return { items, entries, bills, customers, payments, production, expenses, nextCode, settings: backupSettings, deletedItems, deletedEntries, deletedBills, deletedCustomers, deletedPayments, deletedProduction, deletedExpenses, archivedBills, usedBillNumbers, cashierLog, _backupDate: new Date().toISOString(), _appVersion: 'Farina Bakery v4.7' };
+function getFullBackupData(includeSecrets) {
+  const safeSettings={...settings};
+  if(!includeSecrets){ delete safeSettings.ownerPin; delete safeSettings.cashierPin; delete safeSettings.deleteCode; }
+  return { items, entries, bills, customers, payments, production, expenses, nextCode, settings: safeSettings, deletedItems, deletedEntries, deletedBills, deletedCustomers, deletedPayments, deletedProduction, deletedExpenses, archivedBills, usedBillNumbers, cashierLog, _backupDate: new Date().toISOString(), _appVersion: 'Farina Bakery v4.9' };
 }
 function backupToPdfHtml() {
   return `<div style="text-align:center;margin-bottom:14px"><h1 style="font-size:20px;margin:0">${esc(settings.name || 'Farina Bakery')}</h1><div style="font-size:12px">Full Backup Report</div></div><div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:10px"><span>Backup Date: ${fmtDate(today())}</span><span>Time: ${new Date().toLocaleTimeString()}</span></div><h3 style="text-align:center;font-size:14px;margin:14px 0 8px">📊 Data Summary</h3><table style="width:100%;border-collapse:collapse;font-size:11px"><tr style="border:1px solid #999"><td style="padding:5px"><b>Total Items</b></td><td style="padding:5px;text-align:right">${items.length}</td></tr><tr style="border:1px solid #999"><td style="padding:5px"><b>Stock Entries</b></td><td style="padding:5px;text-align:right">${entries.length}</td></tr><tr style="border:1px solid #999"><td style="padding:5px"><b>Total Bills</b></td><td style="padding:5px;text-align:right">${bills.length}</td></tr><tr style="border:1px solid #999"><td style="padding:5px"><b>Total Customers</b></td><td style="padding:5px;text-align:right">${customers.length}</td></tr><tr style="border:1px solid #999"><td style="padding:5px"><b>Archived Bills</b></td><td style="padding:5px;text-align:right">${archivedBills.length}</td></tr></table><h3 style="text-align:center;font-size:14px;margin:18px 0 8px">📦 Items List</h3><table style="width:100%;border-collapse:collapse;font-size:10px"><thead><tr style="background:#eee;border:1px solid #999"><th style="padding:4px;border:1px solid #999">Name</th><th style="padding:4px;border:1px solid #999">Cat</th><th style="padding:4px;border:1px solid #999">Unit</th><th style="padding:4px;border:1px solid #999">Stock</th></tr></thead><tbody>${items.map(i => `<tr><td style="padding:4px;border:1px solid #ccc">${esc(i.name)}</td><td style="padding:4px;border:1px solid #ccc">${esc(i.category || '-')}</td><td style="padding:4px;border:1px solid #ccc">${esc(getUnit(i))}</td><td style="padding:4px;border:1px solid #ccc;text-align:right">${stockOf(i.id)}</td></tr>`).join('')}</tbody></table>`;
 }
 const cashierBackupBtn=$('cashier-backup-json');
-if(cashierBackupBtn) cashierBackupBtn.onclick=()=>{if(!requireOwner())return;const data=getFullBackupData();const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='bakery-backup-'+today()+'.json';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000);markBackup();toast('📤 JSON Backup ban gaya');};
+if(cashierBackupBtn) cashierBackupBtn.onclick=()=>{const data=getFullBackupData();const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='bakery-backup-'+today()+'.json';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000);markBackup();toast('📤 JSON Backup ban gaya');};
 
 $('backup-data').onclick = () => {
-  if(!requireOwner()) return;
   const data = getFullBackupData();
   const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
   const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'bakery-backup-' + today() + '.json'; a.click();
   URL.revokeObjectURL(a.href); markBackup(); toast('📤 JSON Backup ban gaya');
 };
-$('backup-pdf').onclick = async () => { if(!requireOwner()) return; const html = backupToPdfHtml(); await downloadPdf(html, 'bakery-backup-' + today() + '.pdf', 'a4'); markBackup(); };
+$('backup-pdf').onclick = async () => { const html = backupToPdfHtml(); await downloadPdf(html, 'bakery-backup-' + today() + '.pdf', 'a4'); markBackup(); };
 
 setTimeout(() => {
   const srp = $('share-report-pdf');
-  if (srp) srp.onclick = async () => { if(!requireOwner()) return; const d = reportData(); const periodLabel = $('r-range-label').textContent || 'All Data'; const pg = Math.min(reportPage, Math.max(0, Math.ceil(d.rows.length / PAGE_SIZE) - 1)); const html = reportPagesHtml(d, periodLabel, pg); await sharePdf(html, 'report-' + today() + '.pdf', 'Farina Bakery Report', 'a4'); };
+  if (srp) srp.onclick = async () => { const d = reportData(); const periodLabel = $('r-range-label').textContent || 'All Data'; const pg = Math.min(reportPage, Math.max(0, Math.ceil(d.rows.length / PAGE_SIZE) - 1)); const html = reportPagesHtml(d, periodLabel, pg); await sharePdf(html, 'report-' + today() + '.pdf', 'Farina Bakery Report', 'a4'); };
   const srj = $('share-report-json');
-  if (srj) srj.onclick = async () => { if(!requireOwner()) return; const d = reportData(); const jsonData = { reportDate: today(), period: $('r-range-label').textContent, shopName: settings.name, totalSales: d.sales, totalBills: d.bs.length, cogs: d.cogs, grossProfit: d.grossProfit, totalExpense: d.totalExpense, netProfit: d.netProfit, expenseBreakdown: d.expenseByCat, items: d.rows }; await shareJson(jsonData, 'report-' + today() + '.json', 'Farina Bakery Report'); };
+  if (srj) srj.onclick = async () => { const d = reportData(); const jsonData = { reportDate: today(), period: $('r-range-label').textContent, shopName: settings.name, totalSales: d.sales, totalBills: d.bs.length, cogs: d.cogs, grossProfit: d.grossProfit, totalExpense: d.totalExpense, netProfit: d.netProfit, expenseBreakdown: d.expenseByCat, items: d.rows }; await shareJson(jsonData, 'report-' + today() + '.json', 'Farina Bakery Report'); };
 }, 500);
 
 function reportToPdfHtml(d, periodLabel){ return reportPagesHtml(d, periodLabel); }
@@ -4424,40 +3815,6 @@ $('change-code-btn').onclick=()=>{
   $('old-code').value='';$('new-code').value='';$('new-code2').value='';
   saveData(); toast('✅ Code change');
 };
-$('manual-sync').onclick=async()=>{
-  if(!window._auth||!window._auth.currentUser){toast('Pehle login');return}
-  if(!navigator.onLine){toast('📴 Internet nahi');return}
-  toast('🔄 Syncing...'); syncStatus='syncing'; updateSyncBadge();
-  try{
-    nextPushAt=0; failStreak=0; badOps.clear();
-    if(!syncReady) startRealtimeSync();
-    for(let i=0;i<30&&!syncReady;i++) await new Promise(r=>setTimeout(r,200));
-    if(!syncReady){ syncStatus='offline'; updateSyncBadge(); toast('⚠️ Sync shuru nahi hua — thori der baad try karein'); return; }
-    persistLocal();
-    await pushChanges(true);
-    if(syncStatus==='error') toast('❌ Sync fail: '+(lastSyncError||'unknown'));
-    else if(syncStatus==='pending') toast('📤 Internet slow hai — baad mein khud sync ho jayega');
-    else toast('✅ Sync complete');
-  }catch(e){ toast('❌ Sync fail'); syncStatus='error'; updateSyncBadge(); }
-};
-$('logout-btn').onclick=async()=>{
-  if(await confirmBox('Logout?','Data cloud par safe hai.','Logout')){
-    if(isCashier()) logCashierAction('LOGOUT', 'Logout');
-    try{ await window._fb.signOut(window._auth); }catch(e){}
-    try{
-      localStorage.removeItem('bakery-logged-in');
-      localStorage.removeItem('bakery-login-time');
-      localStorage.removeItem('bakery-pending-sync');
-      localStorage.removeItem('bakery-user-mode');
-    }catch(e){}
-    location.reload();
-  }
-};
-setInterval(()=>{
-  const el=$('cloud-status'); if(!el)return;
-  if(window._auth&&window._auth.currentUser){ el.textContent='☁️ '+window._auth.currentUser.email+' | Mode: '+(isCashier()?'👤 Cashier':'👑 Owner')+' | Sync: '+(syncReady?'✅ Ready':'⏳ Starting')+(lastSyncError?' | ⚠️ '+lastSyncError:''); }
-  else { el.textContent='⚠️ Offline mode'; }
-},2000);
 
 // ============================================
 // 🗑️ BULK DELETE
@@ -4528,7 +3885,7 @@ $('modal-ok').onclick=async()=>{
 $('s-delall-enabled').onchange=function(){
   if(!requireOwner()){ this.checked=!!settings.deleteAllEnabled; return; }
   settings.deleteAllEnabled=this.checked;
-  try { localStorage.setItem('bakery-meta-ts', String(Date.now())); } catch(e){}
+  
   saveData(); applyDeleteAllUI();
   toast(this.checked?'✅ Delete All ON':'Delete All OFF');
 };
@@ -4566,7 +3923,7 @@ document.querySelectorAll('[data-delete-option]').forEach(c=>c.addEventListener(
 // ============================================
 function renderAll(){
   invalidateStockCache();
-  try{ renderStockOut(); renderUsers(); renderQuickProducts(); renderHeldBills(); }catch(e){ console.warn('v4.8 render:', e); }
+  try{ renderStockOut(); renderUsers(); renderQuickProducts(); renderHeldBills(); }catch(e){ console.warn('v4.9 render:', e); }
   renderSelects();
   renderLowStock();
   renderDashboard();
@@ -4605,7 +3962,6 @@ function renderAll(){
   renderLastBackup();
   if(settings.logo){ tempLogoData=settings.logo; $('logo-preview').src=settings.logo; $('logo-preview').style.display='block'; $('remove-logo').style.display='inline-block'; }
   else { tempLogoData=''; $('logo-preview').style.display='none'; $('remove-logo').style.display='none'; }
-  updateSyncBadge();
   if(isCashier()) renderCashierZReport();
   updateDraftBox();
   updateHeaderShopInfo();
@@ -5157,7 +4513,7 @@ function printInventoryList() {
   }
   const grandProfit = grandSell - grandBuy;
   const grandMargin = grandBuy > 0 ? ((grandProfit / grandBuy) * 100).toFixed(1) : 0;
-  pagesHtml += `<div class="page-last" style="page-break-before: always; page-break-after: auto; padding: 8px 0;"><div class="inv-head" style="margin-bottom:12px"><h2 style="font-size:18px;margin:0">${esc(settings.name || 'Bakery')} — Grand Total</h2></div><table style="width:100%;border-collapse:collapse;font-size:11px"><tr style="background:#eee;font-weight:bold"><td style="border:1px solid #999;padding:6px">Total Items (names)</td><td style="border:1px solid #999;padding:6px;text-align:right">${grandItemCount}</td></tr><tr><td style="border:1px solid #999;padding:6px">Total Quantity</td><td style="border:1px solid #999;padding:6px;text-align:right">${formatUnitTotals(grandQtyByUnit)}</td></tr><tr><td style="border:1px solid #999;padding:6px">Total Buy Value</td><td style="border:1px solid #999;padding:6px;text-align:right">${money(grandBuy)}</td></tr><tr><td style="border:1px solid #999;padding:6px">Total Sell Value</td><td style="border:1px solid #999;padding:6px;text-align:right">${money(grandSell)}</td></tr><tr style="background:#FFF1D6;font-weight:bold"><td style="border:1px solid #999;padding:6px">Expected Profit</td><td style="border:1px solid #999;padding:6px;text-align:right;color:#2F9D78">${money(grandProfit)} (${grandMargin}%)</td></tr></table><div class="inv-thanks" style="margin-top:14px;font-size:10px">Generated by Farina Bakery Register v4.7</div></div>`;
+  pagesHtml += `<div class="page-last" style="page-break-before: always; page-break-after: auto; padding: 8px 0;"><div class="inv-head" style="margin-bottom:12px"><h2 style="font-size:18px;margin:0">${esc(settings.name || 'Bakery')} — Grand Total</h2></div><table style="width:100%;border-collapse:collapse;font-size:11px"><tr style="background:#eee;font-weight:bold"><td style="border:1px solid #999;padding:6px">Total Items (names)</td><td style="border:1px solid #999;padding:6px;text-align:right">${grandItemCount}</td></tr><tr><td style="border:1px solid #999;padding:6px">Total Quantity</td><td style="border:1px solid #999;padding:6px;text-align:right">${formatUnitTotals(grandQtyByUnit)}</td></tr><tr><td style="border:1px solid #999;padding:6px">Total Buy Value</td><td style="border:1px solid #999;padding:6px;text-align:right">${money(grandBuy)}</td></tr><tr><td style="border:1px solid #999;padding:6px">Total Sell Value</td><td style="border:1px solid #999;padding:6px;text-align:right">${money(grandSell)}</td></tr><tr style="background:#FFF1D6;font-weight:bold"><td style="border:1px solid #999;padding:6px">Expected Profit</td><td style="border:1px solid #999;padding:6px;text-align:right;color:#2F9D78">${money(grandProfit)} (${grandMargin}%)</td></tr></table><div class="inv-thanks" style="margin-top:14px;font-size:10px">Generated by Farina Bakery Register v4.9</div></div>`;
   $('print-region').innerHTML = pagesHtml;
   applyPrinterCSS();
   safePrint();
@@ -5389,16 +4745,88 @@ refreshDateHints();
 setTimeout(updateDraftBox, 500);
 updateHeaderShopInfo();
 
-console.log('✅ Farina Bakery v4.7 loaded — All 25 bugs fixed');
-console.log('📱 Device:', DEVICE_ID);
-console.log('✅ Fixes: softDelete mapping | nextBillNo+usedBillNumbers | Batch restore | Double refund/void/exchange | customerDue FIFO | old due balance | password field | empty string sync | WhatsApp phone update | LowStock=0 handling | PDF mobile width | isStockInEntry type | memory leak | modal lock | render optimization | print trailing page | localStorage safe | phone normalize | date regex | async await fixes');
+console.log('✅ Farina Bakery v4.9 loaded — All 25 bugs fixed');
 </script>
 
-
+<!-- ===== v4.9: Sidebar look ===== -->
+<style id="sidebar-style">
+:root{--paper:#f2f6f9;--paper-dark:#e3e9ef;--card:#fff;--rule:#e3e9ef;--teal:#12a594;--teal-d:#0e8577;--navy:#14213d;--navy2:#1c3556}
+body{background:#f2f6f9;background-image:none}
+header{background:#fff;border-bottom:1px solid #e3e9ef;box-shadow:none}
+.card{border-radius:20px;box-shadow:none;border-color:#e3e9ef}
+.card h2{color:#14213d}
+.stat{border-radius:18px;border-color:#e3e9ef}
+button.primary{border-radius:14px;background:linear-gradient(135deg,#17b5a2,#0e8577);box-shadow:0 8px 18px rgba(18,165,148,.28)}
+button.secondary{border-radius:14px;color:#0e8577;border-color:#12a594}
+#sb-topbar{position:sticky;top:0;z-index:60;display:flex;align-items:center;gap:12px;background:#fff;border-bottom:1px solid #e3e9ef;padding:10px 14px}
+#sb-ham{width:42px;height:42px;border-radius:12px;background:#f2f6f9;border:0;font-size:20px;cursor:pointer;color:#14213d}
+#sb-title{font-size:1.15rem;font-weight:700;color:#14213d;flex:1;font-family:Inter,sans-serif}
+#sb-overlay{position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:80;display:none}
+#sb-overlay.show{display:block}
+body nav{position:fixed;top:0;left:0;bottom:0;width:270px;max-width:84vw;z-index:90;background:#14213d;display:flex;flex-direction:column;flex-wrap:nowrap;justify-content:flex-start;align-items:stretch;gap:2px;margin:0;padding:18px 12px 24px;overflow-x:hidden;overflow-y:auto;transform:translateX(-102%);transition:transform .25s;box-shadow:none}
+body nav.open{transform:none;box-shadow:8px 0 30px rgba(0,0,0,.3)}
+body nav .nav-brand{display:flex;align-items:center;gap:10px;margin:0 4px 8px;color:#fff}
+body nav .nb-logo{width:42px;height:42px;border-radius:12px;background:#12a594;color:#fff;display:grid;place-items:center;font-weight:800;font-size:22px}
+body nav .nav-brand b{display:block;font-size:1.05rem;font-family:Inter,sans-serif}
+body nav .nav-brand small{display:block;letter-spacing:3px;font-size:.62rem;color:#9fb1c8}
+body nav .nav-grp{font-size:.68rem;letter-spacing:3px;color:#7f93ad;margin:16px 8px 6px;text-transform:uppercase}
+body nav button{display:block;width:100%;flex:0 0 auto;min-width:0;text-align:left;background:transparent;color:#cfd9e6;border:0;border-bottom:0;border-radius:12px;padding:12px 14px;font-size:.95rem;font-weight:600}
+body nav button:hover{background:#1c3556}
+body nav button.active{background:#12a594;color:#fff;border:0}
+body nav button .nav-badge{float:right;margin-top:2px}
+body nav .nav-logout{margin-top:auto;padding:14px;color:#f08c8c;cursor:pointer;font-weight:600}
+label{line-height:1.4}
+#pos-bill h2{display:flex;align-items:center;justify-content:space-between;gap:8px}
+#b-clear{background:#fdeeee;color:#e05252;border:0;border-radius:12px;padding:8px 16px;font-weight:700;cursor:pointer;width:auto!important;flex:none;margin:0!important;font-size:.85rem}
+/* ---- Billing: wide screens = left products, right Current Bill ---- */
+.bill-grid{display:block}
+@media(min-width:1100px){
+  body.on-bill main{max-width:1320px}
+  .bill-grid{display:grid;grid-template-columns:minmax(0,1fr) 410px;grid-template-rows:auto auto auto 1fr;column-gap:18px}
+  .bill-grid>.pos-scan{grid-column:1;grid-row:1}
+  .bill-grid>.bill-products{grid-column:1;grid-row:2}
+  .bill-grid>.bill-history{grid-column:1;grid-row:3}
+  .bill-grid>#pos-bill-home{grid-column:2;grid-row:1 / span 4;align-self:start;position:sticky;top:12px;max-height:calc(100vh - 24px);overflow-y:auto;border-radius:20px}
+  .bill-grid>#pos-bill-home .card{margin-bottom:0}
+}
+/* ---- POS-style billing ---- */
+.pos-scan{background:#1c3556;border-radius:20px;padding:18px;color:#cfd9e6;margin-bottom:16px}
+.pos-scan>small{display:block;letter-spacing:.5px;font-size:.72rem;color:#b7c6da}
+.pos-scan input[type=text]{margin:8px 0;border:2px solid #12a594;border-radius:14px;padding:13px 14px;font-size:1rem;background:#fff}
+.pos-scan-row{display:flex;gap:10px;align-items:stretch}
+.pos-scan-row input{flex:1;min-width:0;border:2px solid #12a594;border-radius:14px;padding:12px 14px;font-size:1.05rem;font-weight:700;background:#fff}
+.pos-add{background:#12a594;color:#fff;border:0;border-radius:14px;padding:0 26px;font-weight:700;font-size:1rem;cursor:pointer;font-family:inherit}
+.pos-scan-btns{display:flex;gap:8px;margin-top:10px}
+.pos-scan .camera-btn{margin-top:0;flex:1;background:rgba(255,255,255,.1);color:#fff;border:1px solid rgba(255,255,255,.22);border-radius:12px;padding:10px 6px;font-size:.85rem}
+.pos-prods{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px}
+@media(min-width:700px){.pos-prods{grid-template-columns:repeat(4,1fr)}}
+.pos-prod{border:1px solid #e3e9ef;border-radius:16px;padding:14px;background:#fff;text-align:left;cursor:pointer;font-family:inherit;color:#14213d;transition:transform .05s,box-shadow .15s}
+.pos-prod:hover{box-shadow:0 4px 14px rgba(20,33,61,.08)}
+.pos-prod:active{transform:scale(.98)}
+.pos-prod .pe{font-size:34px;line-height:1.1}
+.pos-prod b{display:block;margin-top:6px;font-size:.95rem;line-height:1.3}
+.pos-prod small{display:block;color:#6b7a90;margin-top:2px;font-size:.8rem}
+.pos-prod u{display:block;text-decoration:none;color:#12a594;font-weight:700;margin-top:6px;font-family:Inter,sans-serif}
+.pos-prod.out{opacity:.45}
+.pos-prod.low small{color:#e05252}
+#pos-bill h2{font-size:1.35rem;color:#14213d;border-bottom:0;padding-bottom:0}
+#pos-bill .bill-line-row{border-bottom:1px solid #e3e9ef;padding:12px 0}
+.pos-actions{display:flex;gap:10px;margin-top:14px;align-items:stretch}
+.pos-actions button{margin-top:0!important;width:auto!important}
+.pos-actions .primary{flex:2}
+.pos-hold{flex:1;background:#fff;color:#14213d;border:1px solid #e3e9ef;border-radius:14px;font-weight:700;font-size:1rem;cursor:pointer;font-family:inherit}
+.held-row{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:10px 12px;margin-top:8px;background:#f2f6f9;border-radius:12px;font-size:.88rem;flex-wrap:wrap}
+@media(min-width:960px){
+  #appDiv{margin-left:270px}
+  body nav{transform:none}
+  #sb-topbar{display:none}
+  #sb-overlay{display:none!important}
+}
+</style>
 
 <script>
 // ============================================
-// v4.8: Sidebar + Stock Out + Users & Roles
+// v4.9: Sidebar + Stock Out + Users & Roles
 // ============================================
 const TAB_TITLES={dashboard:'Dashboard',entry:'Stock In',stockout:'Stock Out',items:'Items & Products',suppliers:'Suppliers',lowstock:'Alerts',bill:'Billing',production:'Production',customers:'Khata / Udhaar',expense:'Expenses',report:'Reports',trash:'Trash & Archive',users:'Users & Roles',settings:'Settings & Backup'};
 function updateTopbar(tab){ const t=$('sb-title'); if(t) t.textContent=TAB_TITLES[tab]||'Farina Bakery'; }
@@ -5465,7 +4893,7 @@ $('bu-item-search').addEventListener('item-selected',()=>{
  $('bu-cost-hint').innerHTML='Buy rate: <b>'+money(it.cost||0)+'</b> per '+esc(getUnit(it))+' · Available stock: <b>'+stockOf(it.id)+'</b>';
 });
 $('bu-save').onclick=async()=>{
- if(!requireOwner()) return;
+ if(isCashier()) logCashierAction('SHOP_USE_EXPENSE','Shop Use / Item Expense save kiya');
  const date=$('bu-date').value;
  // The hidden select can lose its value after a delayed render. Resolve from
  // the visible search text as a safe fallback, so a visibly selected item works.
@@ -5509,13 +4937,13 @@ async function changePinFlow(role){
     if(n1===ownerPin){ toast('⚠️ Owner PIN se different rakhein'); return; }
     settings.cashierPin=n1;
   }
-  try{ localStorage.setItem('bakery-meta-ts',String(Date.now())); }catch(e){}
+  
   await saveData(); renderAll(); toast('✅ '+label+' PIN change ho gaya');
 }
 function renderUsers(){
   const tb=$('users-table'); if(!tb) return;
   const mode=getUserMode();
-  const email=(window._auth&&window._auth.currentUser)?window._auth.currentUser.email:'—';
+  const email='Owner PIN';
   const rows=[
     {name:'👑 Owner',role:'owner',pill:'info',label:'Owner',login:email},
     {name:'👤 Cashier',role:'cashier',pill:'warn',label:'Cashier',login:'Cashier PIN'}
@@ -5622,11 +5050,19 @@ function renderHeldBills(){
   });
 }
 try{ renderStockOut(); renderUsers(); renderQuickProducts(); renderHeldBills(); updatePosCount(); }catch(e){}
-(function(){ const sb=$('syncBadge'); if(!sb) return; sb.style.cursor='pointer';
-  sb.onclick=()=>{ if(lastSyncError) toast('Sync: '+lastSyncError+' — dobara koshish'); nextPushAt=0; failStreak=0; badOps.clear(); pushChanges(true); }; })();
 </script>
 
-
+<!-- ===== Startup helpers ===== -->
+<style>
+.modal-overlay{z-index:6000}.toast{z-index:7000}
+.modal-box p,.modal-box label{white-space:pre-line}
+@media(max-width:560px){header{padding-top:60px}nav{padding-top:8px!important}}
+/* Compact Settings: ہر box title پر click کر کے کھولیں یا بند کریں */
+#tab-settings > .settings-collapse-card > h2{cursor:pointer;user-select:none;min-height:28px}
+#tab-settings > .settings-collapse-card > h2::after{content:'−';font-family:Inter,sans-serif;font-size:1.25rem;line-height:1;color:var(--brass);margin-left:auto;padding-left:10px}
+#tab-settings > .settings-collapse-card.collapsed > h2::after{content:'+'}
+#tab-settings > .settings-collapse-card.collapsed > :not(h2){display:none!important}
+</style>
 <script>
 (function(){
 // Toast / modal ko appDiv se bahar nikaalo
@@ -5640,6 +5076,9 @@ try{
     if(val!==''&&val!=null)settings[k]=val;
   });
 }catch(e){}
+// Purani Firebase/sync ki bachi hui local keys saaf karo
+['bakery-sync-hash','bakery-meta-ts','bakery-pending-sync','bakery-pending-changes','bakery-logged-in','bakery-login-time','bakery-user-mode'].forEach(k=>{try{localStorage.removeItem(k)}catch(e){}});
+showLogin();
 
 // Settings cards start compact; click any title to expand/collapse it.
 const settingsRoot=$('tab-settings');
@@ -5665,11 +5104,12 @@ if(settingsRoot){
   });
 }
 
+// PWA manifest
+if(!document.querySelector('link[rel=manifest]')){const l=document.createElement('link');l.rel='manifest';l.href='/manifest.json';document.head.appendChild(l)}
 if('serviceWorker' in navigator)navigator.serviceWorker.register('/sw.js').catch(()=>{});
 
 
 })();
 </script>
 </body>
-</html>
-
+  </html>
