@@ -1,4 +1,4 @@
-const CACHE = 'bakery-v61';
+const CACHE = 'bakery-v62';
 const HTML_FILE = '/index.html';
 
 const REQUIRED_ASSETS = [
