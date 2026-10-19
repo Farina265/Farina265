@@ -3632,87 +3632,84 @@ function checkBackupReminder(){
   if(days>=7)setTimeout(()=>toast('⚠️ 7+ days backup'),1500);
 }
 function validateBackupPayload(p){
-  const listKeys=['items','entries','bills','customers','payments','production','expenses','deletedItems','deletedEntries','deletedBills','deletedCustomers','deletedPayments','deletedProduction','deletedExpenses','archivedBills','usedBillNumbers','cashierLog'];
-  if(!p || typeof p!=='object' || !Array.isArray(p.items) || !Array.isArray(p.entries) || !Array.isArray(p.bills)) return {ok:false,error:'Required lists missing'};
-  for(const key of listKeys){ if(p[key]!=null && !Array.isArray(p[key])) return {ok:false,error:'Invalid list: '+key}; }
-  const all=[...p.items,...(p.deletedItems||[])];
-  const ids=new Set();
-  for(const x of all){
-    if(!x || typeof x!=='object' || typeof x.id!=='string' || !x.id.trim()) return {ok:false,error:'Invalid item record'};
-    if(ids.has(x.id)) return {ok:false,error:'Duplicate item ID: '+x.id}; ids.add(x.id);
-    if(typeof x.name!=='string' || !x.name.trim()) return {ok:false,error:'Item name missing'};
-    for(const k of ['cost','price','opening','lowStock']) if(x[k]!=null && (!Number.isFinite(Number(x[k])) || Number(x[k])<0)) return {ok:false,error:'Invalid item number: '+k};
-  }
-  const checkRecords=(arr,label)=>{ for(const x of (arr||[])){ if(!x || typeof x!=='object' || typeof x.id!=='string' || !x.id.trim()) return label+' record invalid'; } return ''; };
-  for(const [arr,label] of [[p.entries,'entry'],[p.bills,'bill'],[p.customers||[],'customer'],[p.payments||[],'payment'],[p.production||[],'production'],[p.expenses||[],'expense'],[p.deletedEntries||[],'deleted entry'],[p.deletedBills||[],'deleted bill'],[p.deletedCustomers||[],'deleted customer'],[p.deletedPayments||[],'deleted payment'],[p.deletedProduction||[],'deleted production'],[p.deletedExpenses||[],'deleted expense'],[p.archivedBills||[],'archived bill']]){ const err=checkRecords(arr,label); if(err) return {ok:false,error:err}; }
-  for(const b of p.bills.concat(p.deletedBills||[],p.archivedBills||[])){
-    if(!Array.isArray(b.lines)) return {ok:false,error:'Bill lines invalid'};
-    for(const l of b.lines){ if(!l || typeof l!=='object' || typeof l.itemId!=='string' || !Number.isFinite(Number(l.qty)) || Number(l.qty)<0) return {ok:false,error:'Bill line invalid'}; }
-  }
-  const itemIds=new Set(all.map(x=>x.id));
-  for(const e of [...p.entries,...(p.deletedEntries||[])]) if(e.itemId!=null && !itemIds.has(String(e.itemId))) return {ok:false,error:'Entry item reference missing'};
-  for(const b of p.bills.concat(p.deletedBills||[],p.archivedBills||[])) for(const l of b.lines) if(!itemIds.has(String(l.itemId))) return {ok:false,error:'Bill item reference missing'};
-  if(p.nextCode!=null && (!Number.isFinite(Number(p.nextCode)) || Number(p.nextCode)<0)) return {ok:false,error:'Invalid next bill number'};
-  if(p.settings!=null && (typeof p.settings!=='object' || Array.isArray(p.settings))) return {ok:false,error:'Settings invalid'};
+  if(!p || typeof p!=='object' || Array.isArray(p)) return {ok:false,error:'Yeh JSON backup file nahi lagti'};
+  if(!Array.isArray(p.items)) return {ok:false,error:'Is file mein "items" list nahi mili — shayad yeh is app ka backup nahi'};
+  const recKeys=['items','entries','bills','customers','payments','production','expenses','deletedItems','deletedEntries','deletedBills','deletedCustomers','deletedPayments','deletedProduction','deletedExpenses','archivedBills'];
+  const listKeys=[...recKeys,'usedBillNumbers','cashierLog'];
+  listKeys.forEach(k=>{ if(p[k]==null) p[k]=[]; });
+  for(const k of listKeys){ if(!Array.isArray(p[k])) return {ok:false,error:'Backup mein "'+k+'" list sahi nahi'}; }
+  // Records ko saaf karo: id string banao, kharab rows chhor do (restore fail nahi hota)
+  recKeys.forEach(k=>{
+    p[k]=p[k].filter(x=>x && typeof x==='object' && !Array.isArray(x));
+    p[k].forEach(x=>{ x.id=(x.id==null||String(x.id).trim()==='')?uid():String(x.id); });
+  });
+  p.items.concat(p.deletedItems).forEach(x=>{
+    if(typeof x.name!=='string' || !x.name.trim()) x.name='Item';
+    ['cost','price','opening','lowStock'].forEach(k=>{ if(x[k]!=null && !Number.isFinite(Number(x[k]))) x[k]=0; });
+  });
+  p.bills.concat(p.deletedBills,p.archivedBills).forEach(b=>{
+    if(!Array.isArray(b.lines)) b.lines=[];
+    b.lines=b.lines.filter(l=>l && typeof l==='object');
+    b.lines.forEach(l=>{ l.itemId=String(l.itemId); if(!Number.isFinite(Number(l.qty))) l.qty=0; });
+  });
+  if(p.nextCode!=null && (!Number.isFinite(Number(p.nextCode)) || Number(p.nextCode)<0)) p.nextCode=1001;
+  if(p.settings==null || typeof p.settings!=='object' || Array.isArray(p.settings)) p.settings={};
   return {ok:true};
 }
 
-$('restore-data').onclick=async()=>{
-  if(!await confirmBox('Restore Backup?','Mojooda data backup file se replace ho jayega.','Continue')) return;
-  try{ downloadTextFile(JSON.stringify(getFullBackupData()),'safety-before-restore-'+today()+'.json','application/json'); }catch(e){}
-  $('restore-file').click();
-};
-$('restore-file').onchange=e=>{
-  const f=e.target.files[0];if(!f)return;
-  if(f.size>25*1024*1024){ toast('❌ Backup file 25MB se chhoti honi chahiye'); e.target.value=''; return; }
-  const r=new FileReader();
+// File picker seedha button click par khulta hai (browser block na kare)
+$('restore-data').onclick=()=>{ $('restore-file').click(); };
+$('restore-file').onchange=async e=>{
+  const f=e.target.files[0]; e.target.value='';
+  if(!f) return;
+  if(f.size>25*1024*1024){ alert('❌ Backup file 25MB se chhoti honi chahiye'); return; }
+  if(!await confirmBox('Restore Backup?','"'+f.name+'" se mojooda data replace ho jayega.','Continue')) return;
+  try{ downloadTextFile(JSON.stringify(getFullBackupData()),'safety-before-restore-'+today()+'.json','application/json'); }catch(_){}
   let beforeRestore=null;
   try { beforeRestore=JSON.parse(JSON.stringify(getFullBackupData(true))); } catch(_) {}
-  r.onload=async()=>{
-    try{
-      const p=JSON.parse(r.result);
-      const validation=validateBackupPayload(p);
-      if(!validation.ok) throw Error(validation.error || 'Invalid backup structure');
-      items=p.items;entries=p.entries;bills=p.bills;customers=p.customers||[];payments=p.payments||[];
-      production=p.production||[];expenses=p.expenses||[];
-      deletedItems=p.deletedItems||[];deletedEntries=p.deletedEntries||[];
-      deletedBills=p.deletedBills||[];deletedCustomers=p.deletedCustomers||[];
-      deletedPayments=p.deletedPayments||[];deletedProduction=p.deletedProduction||[];
-      deletedExpenses=p.deletedExpenses||[];
-      archivedBills=p.archivedBills||[];usedBillNumbers=p.usedBillNumbers||[];cashierLog=p.cashierLog||[];
-      nextCode=p.nextCode||1001;
-      
-      const incoming = p.settings || {};
-      Object.keys(incoming).forEach(key => {
-        const val = incoming[key];
-        if(val === null || val === undefined) return;
-        if(key === 'cashierPin' || key === 'ownerPin' || key === 'deleteCode') return; // backup se PIN/code kabhi nahi badalte
-        settings[key] = val;
-      });
-      
-      if(!settings.deleteCode)settings.deleteCode='';
-      if(!settings.cashierPin)settings.cashierPin='';
-      if(!settings.ownerPin)settings.ownerPin='';
-      migrateData();
-      const saved=await saveData();
-      if(!saved) throw Error('Backup local save failed');
-      renderAll();toast('Backup restored successfully');
-    }catch(x){
-      if(beforeRestore){
-        try{
-          items=beforeRestore.items; entries=beforeRestore.entries; bills=beforeRestore.bills;
-          customers=beforeRestore.customers; payments=beforeRestore.payments; production=beforeRestore.production; expenses=beforeRestore.expenses;
-          deletedItems=beforeRestore.deletedItems; deletedEntries=beforeRestore.deletedEntries; deletedBills=beforeRestore.deletedBills; deletedCustomers=beforeRestore.deletedCustomers;
-          deletedPayments=beforeRestore.deletedPayments; deletedProduction=beforeRestore.deletedProduction; deletedExpenses=beforeRestore.deletedExpenses;
-          archivedBills=beforeRestore.archivedBills; usedBillNumbers=beforeRestore.usedBillNumbers; cashierLog=beforeRestore.cashierLog; nextCode=beforeRestore.nextCode; settings=beforeRestore.settings;
-          invalidateStockCache(); persistLocal(); renderAll();
-        }catch(rollbackError){ console.error('Restore rollback failed:',rollbackError); }
-      }
-      console.error('Restore failed:',x); toast('❌ Backup restore nahi hua: '+(x.message||'invalid backup'));
+  try{
+    const text=await new Promise((res,rej)=>{ const r=new FileReader(); r.onload=()=>res(String(r.result||'')); r.onerror=()=>rej(r.error||Error('File read nahi hui')); r.readAsText(f); });
+    let p;
+    try{ p=JSON.parse(text.replace(/^﻿/,'')); }catch(_){ throw Error('File ka JSON kharab hai (adhoori ya galat file)'); }
+    const validation=validateBackupPayload(p);
+    if(!validation.ok) throw Error(validation.error || 'Invalid backup structure');
+    items=p.items;entries=p.entries;bills=p.bills;customers=p.customers;payments=p.payments;
+    production=p.production;expenses=p.expenses;
+    deletedItems=p.deletedItems;deletedEntries=p.deletedEntries;
+    deletedBills=p.deletedBills;deletedCustomers=p.deletedCustomers;
+    deletedPayments=p.deletedPayments;deletedProduction=p.deletedProduction;
+    deletedExpenses=p.deletedExpenses;
+    archivedBills=p.archivedBills;usedBillNumbers=p.usedBillNumbers;cashierLog=p.cashierLog;
+    nextCode=Number(p.nextCode)||1001;
+    Object.keys(p.settings).forEach(key=>{
+      const val=p.settings[key];
+      if(val===null||val===undefined) return;
+      if(key==='cashierPin'||key==='ownerPin'||key==='deleteCode') return; // backup se PIN/code kabhi nahi badalte
+      settings[key]=val;
+    });
+    if(!settings.deleteCode)settings.deleteCode='';
+    if(!settings.cashierPin)settings.cashierPin='';
+    if(!settings.ownerPin)settings.ownerPin='';
+    migrateData();
+    invalidateStockCache();
+    const saved=await saveData();
+    if(!saved) throw Error('Data save nahi hua (storage full ho sakta hai)');
+    renderAll();
+    toast('✅ Backup restore ho gaya: '+items.length+' items, '+bills.length+' bills');
+  }catch(x){
+    if(beforeRestore){
+      try{
+        items=beforeRestore.items; entries=beforeRestore.entries; bills=beforeRestore.bills;
+        customers=beforeRestore.customers; payments=beforeRestore.payments; production=beforeRestore.production; expenses=beforeRestore.expenses;
+        deletedItems=beforeRestore.deletedItems; deletedEntries=beforeRestore.deletedEntries; deletedBills=beforeRestore.deletedBills; deletedCustomers=beforeRestore.deletedCustomers;
+        deletedPayments=beforeRestore.deletedPayments; deletedProduction=beforeRestore.deletedProduction; deletedExpenses=beforeRestore.deletedExpenses;
+        archivedBills=beforeRestore.archivedBills; usedBillNumbers=beforeRestore.usedBillNumbers; cashierLog=beforeRestore.cashierLog; nextCode=beforeRestore.nextCode; settings=beforeRestore.settings;
+        invalidateStockCache(); persistLocal(); renderAll();
+      }catch(rollbackError){ console.error('Restore rollback failed:',rollbackError); }
     }
-  };
-  r.readAsText(f);
-  e.target.value='';
+    console.error('Restore failed:',x);
+    alert('❌ Backup restore nahi hua:\n'+(x.message||'invalid backup')+'\n\nAapka purana data wapas laga diya gaya hai.');
+  }
 };
 
 // ============================================
@@ -5112,4 +5109,4 @@ if('serviceWorker' in navigator)navigator.serviceWorker.register('/sw.js').catch
 })();
 </script>
 </body>
-  </html>
+</html>
