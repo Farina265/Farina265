@@ -1,4 +1,4 @@
-const CACHE_NAME = 'farina-offline-v5';
+const CACHE_NAME = 'farina-offline-v6';
 
 const APP_FILES = [
   '/',
