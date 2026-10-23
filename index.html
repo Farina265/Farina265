@@ -3512,9 +3512,8 @@ function validateBackupPayload(p){
     if(!Array.isArray(b.lines)) return {ok:false,error:'Bill lines invalid'};
     for(const l of b.lines){ if(!l || typeof l!=='object' || typeof l.itemId!=='string' || !Number.isFinite(Number(l.qty)) || Number(l.qty)<0) return {ok:false,error:'Bill line invalid'}; }
   }
-  const itemIds=new Set(all.map(x=>x.id));
-  for(const e of [...p.entries,...(p.deletedEntries||[])]) if(e.itemId!=null && !itemIds.has(String(e.itemId))) return {ok:false,error:'Entry item reference missing'};
-  for(const b of p.bills.concat(p.deletedBills||[],p.archivedBills||[])) for(const l of b.lines) if(!itemIds.has(String(l.itemId))) return {ok:false,error:'Bill item reference missing'};
+  // Historical entries/bills may refer to permanently deleted items. Keep those
+  // records for reports and restore instead of rejecting the complete backup.
   if(p.nextCode!=null && (!Number.isFinite(Number(p.nextCode)) || Number(p.nextCode)<0)) return {ok:false,error:'Invalid next bill number'};
   if(p.settings!=null && (typeof p.settings!=='object' || Array.isArray(p.settings))) return {ok:false,error:'Settings invalid'};
   return {ok:true};
