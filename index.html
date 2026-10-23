@@ -1373,6 +1373,9 @@ function persistLocal(){
     const payload=JSON.stringify({items,entries,bills,customers,payments,production,expenses,nextCode,settings,deletedItems,deletedEntries,deletedBills,deletedCustomers,deletedPayments,deletedProduction,deletedExpenses,archivedBills,usedBillNumbers});
     localStorage.setItem('bakery-offline-owner-cashier-data-v1',payload);
     localStorage.setItem('bakery-offline-owner-cashier-data-time-v1',Date.now().toString());
+    // Separate automatic safety copy on the same device.
+    localStorage.setItem('bakery-offline-owner-cashier-auto-backup-v1',payload);
+    localStorage.setItem('bakery-offline-owner-cashier-auto-backup-time-v1',Date.now().toString());
     window._localSaveFailed=false; return true;
   }catch(e){ window._localSaveFailed=true; console.error('Local data save failed:',e); try{toast('❌ Data save nahi hua — foran JSON backup banayein.')}catch(_){} return false; }
 }
@@ -1413,7 +1416,8 @@ function migrateData(){
 // ✅ FIX #9: Empty string allowed in savedSettings
 async function loadData(){
   try{
-    const p=JSON.parse(localStorage.getItem('bakery-offline-owner-cashier-data-v1')||'{}');
+    const raw=localStorage.getItem('bakery-offline-owner-cashier-data-v1') || localStorage.getItem('bakery-offline-owner-cashier-auto-backup-v1') || '{}';
+    const p=JSON.parse(raw);
     items=p.items||[];entries=p.entries||[];bills=p.bills||[];customers=p.customers||[];
     payments=p.payments||[];production=p.production||[];expenses=p.expenses||[];
     deletedItems=p.deletedItems||[];deletedEntries=p.deletedEntries||[];
@@ -4827,6 +4831,13 @@ try{ renderStockOut(); renderUsers(); renderQuickProducts(); renderHeldBills(); 
   sb.onclick=()=>{ if(lastSyncError) toast('Sync: '+lastSyncError+' — dobara koshish'); nextPushAt=0; failStreak=0; badOps.clear(); pushChanges(true); }; })();
 </script>
 
+<script>
+// Automatic local safety save: no upload, no cloud, device only.
+setInterval(()=>{try{if(typeof persistLocal==='function'&&typeof _sessionMode!=='undefined'&&_sessionMode)persistLocal()}catch(e){}},30000);
+document.addEventListener('visibilitychange',()=>{try{if(document.visibilityState==='hidden'&&typeof persistLocal==='function')persistLocal()}catch(e){}});
+window.addEventListener('beforeunload',()=>{try{if(typeof persistLocal==='function')persistLocal()}catch(e){}});
+</script>
+
 <!-- ===== Startup helpers ===== -->
 <style>
 .modal-overlay{z-index:6000}.toast{z-index:7000}
@@ -4845,7 +4856,7 @@ try{ renderStockOut(); renderUsers(); renderQuickProducts(); renderHeldBills(); 
 
 // Login se pehle saved PIN/settings load karo
 try{
-  const p=(JSON.parse(localStorage.getItem('bakery-offline-owner-cashier-data-v1')||'{}')).settings||{};
+  const p=(JSON.parse(localStorage.getItem('bakery-offline-owner-cashier-data-v1')||localStorage.getItem('bakery-offline-owner-cashier-auto-backup-v1')||'{}')).settings||{};
   Object.keys(p).forEach(k=>{
     const val = p[k];
     if(val!==''&&val!=null)settings[k]=val;
