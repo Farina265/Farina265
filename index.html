@@ -1373,6 +1373,8 @@ const ALL_SYNC_TYPES=[];
 let syncReady=false,pushing=false,pushAgain=false,inflight=0,renderTimer=null;
 let unsubs=[],realtimeUnsubscribe=null;
 function markPendingChange(){ invalidateStockCache(); }
+function getArr(t){return ({items,entries,bills,customers,payments,production,expenses,deletedItems,deletedEntries,deletedBills,deletedCustomers,deletedPayments,deletedProduction,deletedExpenses,archivedBills})[t]||[];}
+function setArr(t,v){switch(t){case'items':items=v;break;case'entries':entries=v;break;case'bills':bills=v;break;case'customers':customers=v;break;case'payments':payments=v;break;case'production':production=v;break;case'expenses':expenses=v;break;case'deletedItems':deletedItems=v;break;case'deletedEntries':deletedEntries=v;break;case'deletedBills':deletedBills=v;break;case'deletedCustomers':deletedCustomers=v;break;case'deletedPayments':deletedPayments=v;break;case'deletedProduction':deletedProduction=v;break;case'deletedExpenses':deletedExpenses=v;break;case'archivedBills':archivedBills=v;break;}invalidateStockCache();}
 function syncH(o){ return ''; }
 function saveHash(){}
 function persistLocal(){
