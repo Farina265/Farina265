@@ -1,4 +1,4 @@
-const CACHE_NAME = 'farina-owner-cashier-v6';
+const CACHE_NAME = 'farina-owner-cashier-v7';
 const APP_SHELL = ['/', '/index.html'];
 
 self.addEventListener('install', event => {
