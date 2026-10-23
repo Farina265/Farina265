@@ -244,9 +244,17 @@ body:not(.delall-on) .delall-btn{display:none!important}
 </style>
 </head>
 <body>
-<div class="lock-screen" id="lockScreen" style="display:none"></div>
+<div class="lock-screen" id="lockScreen">
+  <div class="lock-box">
+    <div class="lock-icon">🔐</div><h2 id="authShopName" style="font-family:Inter,sans-serif">Farina Bakery</h2>
+    <p id="authHint">Owner PIN set karein</p>
+    <div id="setupAuthBox"><input type="password" id="setupOwnerPin" inputmode="numeric" maxlength="8" placeholder="Owner PIN (4-8 digits)"><input type="password" id="setupCashierPin" inputmode="numeric" maxlength="8" placeholder="Cashier PIN (optional)"><button id="setupAuthBtn" type="button">✅ Save & Open</button></div>
+    <div id="loginAuthBox" style="display:none"><input type="password" id="offlineLoginPin" inputmode="numeric" maxlength="8" placeholder="Owner / Cashier PIN"><button id="offlineLoginBtn" type="button">🔓 Open</button></div>
+    <div class="err" id="offlineAuthErr"></div><div class="hint" style="margin-top:14px;color:#8a7a5f;font-size:.75rem">Local offline access. PIN bhoolne se pehle JSON backup zaroor banayein.</div>
+  </div>
+</div>
 
-<div class="app" id="appDiv" style="display:block">
+<div class="app" id="appDiv" style="display:none">
 <div id="sb-topbar"><button id="sb-ham" type="button" aria-label="Menu">☰</button><div id="sb-title">Dashboard</div></div>
 <div id="sb-overlay"></div>
 <header>
@@ -860,6 +868,11 @@ body:not(.delall-on) .delall-btn{display:none!important}
 </div>
 <label>Bill Footer Message</label><input type="text" id="s-footer" placeholder="Shukriya! Dobara tashreef laayen">
 <button class="primary" id="save-settings">Save Settings</button></div>
+<div class="card" id="owner-access-card"><h2>🔐 Owner / Cashier Access</h2>
+<div class="hint" style="margin-top:0">Owner ko full access. Cashier sirf Billing, Expenses aur Khata/Udhaar use karega.</div>
+<label>New Owner PIN (khali = change nahi)</label><input type="password" id="owner-access-pin" inputmode="numeric" maxlength="8" placeholder="4-8 digits">
+<label>New Cashier PIN (khali = change nahi)</label><input type="password" id="cashier-access-pin" inputmode="numeric" maxlength="8" placeholder="4-8 digits">
+<button class="secondary" id="save-access-pins">💾 Save Access PINs</button><button class="secondary" id="offline-logout" style="color:#E2603A;border-color:#E2603A">🚪 Lock / Logout</button></div>
 <div class="card"><h2>📦 Inventory Options</h2>
 <div class="hint" style="margin-top:0">Inventory ki total value, buy/sell value aur expected profit yahan dekhein. Detailed report ya print bhi yahin se karein.</div>
 <div class="inv-banner" id="inv-banner" onclick="showInventoryDetail()">
@@ -1053,7 +1066,7 @@ try { cashierLog = JSON.parse(localStorage.getItem('bakery-offline-cashier-log-v
 
 let settings={
   name:'', address:'', phone:'', currency:'Rs.', lowstock:5, reminder:false, lastBackup:null,
-  footer:'Shukriya! Dobara tashreef laayen', printer:'80', deleteCode:'', logo:'',
+  footer:'Shukriya! Dobara tashreef laayen', printer:'80', deleteCode:'', logo:'', ownerPin:'', cashierPin:'',
   deleteOptions:{items:false,bills:false,entries:false,production:false,customers:false,expenses:false},
   editOptions:{items:true,bills:true},
 };
@@ -1184,42 +1197,20 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 // ============================================
-// 🔒 OFFLINE-ONLY MODE
+// 🔐 OFFLINE OWNER / CASHIER ACCESS
 // ============================================
-// No Firebase, API, account login, PIN login, cloud sync, or shared database path.
-const SESSION_HOURS = Infinity;
-const SESSION_MS = Infinity;
-let _sessionMode = 'owner';
-let _serverRole = null;
-let _serverRoleLoaded = false;
-function getUserMode(){ return 'owner'; }
-function isCashier(){ return false; }
-function requireOwner(){ return true; }
-function logCashierAction(){ /* cashier mode removed */ }
-function validatePin(pin){ return /^\d{4,8}$/.test(String(pin || '').trim()); }
-function isSessionValid(){ return true; }
-function showApp(){
-  const lock=$('lockScreen'), app=$('appDiv');
-  if(lock) lock.style.display='none';
-  if(app) app.style.display='block';
-  return loadData();
-}
-function showLogin(){ showApp(); }
-function applyUserMode(){
-  document.querySelectorAll('[data-owner-only-dashboard]').forEach(el=>el.style.display='');
-  document.querySelectorAll('nav button').forEach(b=>b.style.display='block');
-  document.querySelectorAll('.nav-grp').forEach(g=>g.style.display='block');
-  const badge=$('userModeBadge');
-  if(badge){ badge.textContent='📴 OFFLINE'; badge.style.background='#E2EEF7'; badge.style.color='#4F86B3'; badge.style.borderColor='#4F86B3'; }
-  const hLogout=$('headerLogoutBtn'); if(hLogout) hLogout.style.display='none';
-  const zrep=$('cashier-zreport'); if(zrep) zrep.style.display='none';
-  const pinCard=$('cashier-pin-card'); if(pinCard) pinCard.style.display='none';
-  applyCashierRestrictions(false);
-}
-function applyCashierRestrictions(){
-  const style=document.getElementById('cashier-style'); if(style) style.textContent='';
-}
-function headerLogoutHandler(){ toast('Offline mode mein logout nahi hota. Browser/device ka access secure rakhein.'); }
+const SESSION_HOURS=Infinity, SESSION_MS=Infinity; let _sessionMode=null; let _serverRole=null; let _serverRoleLoaded=true;
+function getUserMode(){return _sessionMode||'owner'}
+function isCashier(){return _sessionMode==='cashier'}
+function requireOwner(){if(isCashier()){toast('⚠️ Yeh sirf Owner kar sakta hai');return false}return true}
+function logCashierAction(){}
+function validatePin(pin){return /^\d{4,8}$/.test(String(pin||'').trim())}
+function isSessionValid(){return !!_sessionMode}
+function showApp(){const l=$('lockScreen'),a=$('appDiv');if(l)l.style.display='none';if(a)a.style.display='block';applyUserMode();return loadData()}
+function showLogin(){_sessionMode=null;const l=$('lockScreen'),a=$('appDiv');if(a)a.style.display='none';if(l)l.style.display='flex';const has=!!String(settings.ownerPin||'').trim();if($('setupAuthBox'))$('setupAuthBox').style.display=has?'none':'block';if($('loginAuthBox'))$('loginAuthBox').style.display=has?'block':'none';if($('authHint'))$('authHint').textContent=has?'Owner ya Cashier PIN daalein':'Pehli dafa Owner PIN set karein';if($('authShopName'))$('authShopName').textContent=settings.name||'Farina Bakery'}
+function applyUserMode(){const c=isCashier(),allowed=['bill','expense','customers'];document.querySelectorAll('[data-owner-only-dashboard]').forEach(e=>e.style.display=c?'none':'');document.querySelectorAll('nav button').forEach(b=>b.style.display=!c||allowed.includes(b.dataset.tab)?'block':'none');document.querySelectorAll('.nav-grp').forEach(g=>g.style.display=c?'none':'block');const badge=$('userModeBadge');if(badge){badge.textContent=c?'👤 CASHIER':'👑 OWNER';badge.style.background=c?'#E2EEF7':'#FFF1D6';badge.style.color=c?'#4F86B3':'#C9762A';badge.style.borderColor=c?'#4F86B3':'#C9762A'}const card=$('owner-access-card');if(card)card.style.display=c?'none':'block';applyCashierRestrictions(c);if(c&&(!document.querySelector('nav button.active')||!allowed.includes(document.querySelector('nav button.active').dataset.tab)))showTab('bill')}
+function applyCashierRestrictions(c){let st=document.getElementById('cashier-style');if(!st){st=document.createElement('style');st.id='cashier-style';document.head.appendChild(st)}st.textContent=c?'[data-softdelbill],[data-exchange],[data-void],[data-softdelcust],[data-softdel],[data-edit],[data-permadel],[data-restore],[data-refund-trash],[data-refund-archive],[data-forever-archive],#bulk-delete-bills,#bulk-delete-customers,#bulk-delete-expenses,#bulk-unit-set{display:none!important}':''}
+function headerLogoutHandler(){showLogin();toast('🔒 App lock ho gayi')}
 
 // ============================================
 // 📊 CASHIER Z-REPORT
@@ -1380,8 +1371,8 @@ function saveHash(){}
 function persistLocal(){
   try{
     const payload=JSON.stringify({items,entries,bills,customers,payments,production,expenses,nextCode,settings,deletedItems,deletedEntries,deletedBills,deletedCustomers,deletedPayments,deletedProduction,deletedExpenses,archivedBills,usedBillNumbers});
-    localStorage.setItem('bakery-offline-data-v1',payload);
-    localStorage.setItem('bakery-offline-data-time-v1',Date.now().toString());
+    localStorage.setItem('bakery-offline-owner-cashier-data-v1',payload);
+    localStorage.setItem('bakery-offline-owner-cashier-data-time-v1',Date.now().toString());
     window._localSaveFailed=false; return true;
   }catch(e){ window._localSaveFailed=true; console.error('Local data save failed:',e); try{toast('❌ Data save nahi hua — foran JSON backup banayein.')}catch(_){} return false; }
 }
@@ -1422,7 +1413,7 @@ function migrateData(){
 // ✅ FIX #9: Empty string allowed in savedSettings
 async function loadData(){
   try{
-    const p=JSON.parse(localStorage.getItem('bakery-offline-data-v1')||'{}');
+    const p=JSON.parse(localStorage.getItem('bakery-offline-owner-cashier-data-v1')||'{}');
     items=p.items||[];entries=p.entries||[];bills=p.bills||[];customers=p.customers||[];
     payments=p.payments||[];production=p.production||[];expenses=p.expenses||[];
     deletedItems=p.deletedItems||[];deletedEntries=p.deletedEntries||[];
@@ -1464,7 +1455,7 @@ function showTab(tab){
   if(tab==='expiry'){tab='lowstock';sub=['alert','expiry'];}
   else if(tab==='archive'){tab='trash';sub=['trash','archive'];}
   if(isCashier()){
-    const cashierTabs = ['dashboard','bill','expense','customers'];
+    const cashierTabs = ['bill','expense','customers'];
     if(!cashierTabs.includes(tab)){ toast('⚠️ Cashier ke liye yeh section available nahi'); return; }
   }
   document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('active',b.dataset.tab===tab));
@@ -4854,12 +4845,19 @@ try{ renderStockOut(); renderUsers(); renderQuickProducts(); renderHeldBills(); 
 
 // Login se pehle saved PIN/settings load karo
 try{
-  const p=(JSON.parse(localStorage.getItem('bakery-offline-data-v1')||'{}')).settings||{};
+  const p=(JSON.parse(localStorage.getItem('bakery-offline-owner-cashier-data-v1')||'{}')).settings||{};
   Object.keys(p).forEach(k=>{
     const val = p[k];
     if(val!==''&&val!=null)settings[k]=val;
   });
 }catch(e){}
+
+function openOfflineSession(mode){_sessionMode=mode;showApp();toast(mode==='cashier'?'👤 Cashier mode active':'👑 Owner mode active')}
+function attemptOfflineLogin(){const pin=String($('offlineLoginPin')?.value||'').trim();if(pin&&pin===String(settings.ownerPin||'')){ $('offlineLoginPin').value='';openOfflineSession('owner');return}if(pin&&pin===String(settings.cashierPin||'')){ $('offlineLoginPin').value='';openOfflineSession('cashier');return}if($('offlineAuthErr'))$('offlineAuthErr').textContent='❌ PIN galat'}
+$('offlineLoginBtn')?.addEventListener('click',attemptOfflineLogin);$('offlineLoginPin')?.addEventListener('keydown',e=>{if(e.key==='Enter')attemptOfflineLogin()});
+$('setupAuthBtn')?.addEventListener('click',()=>{const o=String($('setupOwnerPin')?.value||'').trim(),c=String($('setupCashierPin')?.value||'').trim();if(!validatePin(o)){ $('offlineAuthErr').textContent='⚠️ Owner PIN 4-8 digits ka ho';return}if(c&&(!validatePin(c)||c===o)){ $('offlineAuthErr').textContent='⚠️ Cashier PIN different rakhein';return}settings.ownerPin=o;settings.cashierPin=c;persistLocal();openOfflineSession('owner')});
+$('save-access-pins')?.addEventListener('click',()=>{if(!requireOwner())return;const o=String($('owner-access-pin')?.value||'').trim(),c=String($('cashier-access-pin')?.value||'').trim();if(o&&!validatePin(o)){toast('⚠️ Owner PIN 4-8 digits ka ho');return}if(c&&(!validatePin(c)||c===String(settings.ownerPin||''))){toast('⚠️ Cashier PIN different rakhein');return}if(o)settings.ownerPin=o;if(c)settings.cashierPin=c;saveData();$('owner-access-pin').value='';$('cashier-access-pin').value='';toast('✅ Access PINs save ho gaye')});
+$('offline-logout')?.addEventListener('click',headerLogoutHandler);showLogin();
 
 // Settings cards start compact; click any title to expand/collapse it.
 const settingsRoot=$('tab-settings');
