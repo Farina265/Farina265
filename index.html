@@ -1081,6 +1081,13 @@ let currentExpenseRange='today';
 let currentTrashFilter='items';
 let tempLogoData='';
 let syncStatus='offline';
+function updateSyncBadge(){
+  const b=document.getElementById('syncBadge');
+  if(!b)return;
+  b.textContent='📴 Offline — Local only';
+  b.className='sync-badge offline';
+  b.title='Data isi device ke browser mein save hai';
+}
 let lastSyncError='', failStreak=0, nextPushAt=0;
 const badOps=new Map();
 let saveInProgress=false;
