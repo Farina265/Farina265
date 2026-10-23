@@ -3533,9 +3533,14 @@ $('restore-file').onchange=e=>{
   try { beforeRestore=JSON.parse(JSON.stringify(getFullBackupData())); } catch(_) {}
   r.onload=async()=>{
     try{
-      const p=JSON.parse(r.result);
+      let p=JSON.parse(r.result);
+      // Accept backups wrapped by another app/version as {data:{...}} or {backup:{...}}.
+      if(p && p.data && typeof p.data==='object' && !Array.isArray(p.data)) p=p.data;
+      else if(p && p.backup && typeof p.backup==='object' && !Array.isArray(p.backup)) p=p.backup;
+      // Older backups may not contain optional lists; safely add them before validation.
+      ['customers','payments','production','expenses','deletedItems','deletedEntries','deletedBills','deletedCustomers','deletedPayments','deletedProduction','deletedExpenses','archivedBills','usedBillNumbers','cashierLog'].forEach(k=>{if(p[k]==null)p[k]=[]});
       const validation=validateBackupPayload(p);
-      if(!validation.ok) throw Error(validation.error || 'Invalid backup structure');
+      if(!validation.ok) throw Error(validation.error || 'JSON backup structure invalid');
       items=p.items;entries=p.entries;bills=p.bills;customers=p.customers||[];payments=p.payments||[];
       production=p.production||[];expenses=p.expenses||[];
       deletedItems=p.deletedItems||[];deletedEntries=p.deletedEntries||[];
@@ -3573,7 +3578,10 @@ $('restore-file').onchange=e=>{
           invalidateStockCache(); persistLocal(); renderAll();
         }catch(rollbackError){ console.error('Restore rollback failed:',rollbackError); }
       }
-      console.error('Restore failed:',x); toast('❌ Backup restore nahi hua: '+(x.message||'invalid backup'));
+      console.error('Restore failed:',x);
+      const detail=(x&&x.message)?String(x.message):'JSON file invalid';
+      toast('❌ Restore error: '+detail);
+      setTimeout(()=>alert('Backup restore nahi hua.\n\nReason: '+detail+'\n\nSirf isi website ka JSON Backup file select karein; PDF, HTML ya kisi aur app ki file nahi.'),80);
     }
   };
   r.readAsText(f);
